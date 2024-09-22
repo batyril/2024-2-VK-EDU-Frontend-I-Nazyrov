@@ -3,9 +3,8 @@ export default function nonUniqueElements(data) {
   const initialValue = 1;
 
   data.forEach((element) => {
-    countRepeat[element] = countRepeat[element]
-        ? ++countRepeat[element]
-        : initialValue;
+    countRepeat[element] ??= 0;
+    countRepeat[element]++;
   });
 
   const checkRepeated = (element) => countRepeat[element] > initialValue;
