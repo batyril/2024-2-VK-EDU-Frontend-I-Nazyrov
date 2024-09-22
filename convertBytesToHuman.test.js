@@ -4,6 +4,10 @@ test('Возвращает false для неправильного типа да
   expect(convertBytesToHuman(-1)).toBe(false)
   expect(convertBytesToHuman('string')).toBe(false)
   expect(convertBytesToHuman({count: '5'})).toBe(false)
+  expect(convertBytesToHuman(undefined)).toBe(false)
+  expect(convertBytesToHuman(NaN)).toBe(false)
+  expect(convertBytesToHuman(Infinity)).toBe(false)
+  expect(convertBytesToHuman([1,3,4,5,6])).toBe(false)
 });
 
 test('Возвращает корректное значение для чисел', () => {

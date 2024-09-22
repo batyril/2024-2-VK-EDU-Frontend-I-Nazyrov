@@ -1,7 +1,7 @@
 export default function convertBytesToHuman(bytes) {
-  const isCheckBytes = typeof bytes !== "number" || bytes < 0;
+  const isInvalidBytes = typeof bytes !== "number" || bytes < 0 || isNaN(bytes) || !isFinite(bytes)
 
-  if (isCheckBytes) {
+  if (isInvalidBytes) {
     return false;
   }
 
