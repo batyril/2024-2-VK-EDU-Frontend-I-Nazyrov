@@ -29,11 +29,16 @@
   .message__wrapper {
     display: flex;
     gap: 10px;
+    justify-content: space-between;
   }
   .message__text {
+    overflow-wrap: break-word;
+    width: 90%;
     font-size: 15px;
   }
   .message__name {
+    overflow-wrap: break-word;
+    width: 90%;
     font-weight: 300;
     font-size: 13px;
   }
