@@ -1,20 +1,19 @@
 import { ELEMENTS, scrollToForm } from './UI';
-import messages from './db';
-import { render } from './render';
-import { saveMessagesLS } from './localStorage';
+import { addMessageToLocalStorage } from './localStorage';
+import { renderOneMessage } from './render';
 
 function handleSubmit(event) {
   event.preventDefault();
   const time = new Date();
   const text = ELEMENTS.INPUT.value;
-  if (text.length <= 1) {
+  if (!text.length) {
     return;
   }
-  messages.push({ name: 'me', text, time });
 
-  render();
+  const message = { name: 'me', text, time };
+  addMessageToLocalStorage(message);
+  renderOneMessage(message);
   scrollToForm();
-  saveMessagesLS();
   event.target.reset();
 }
 

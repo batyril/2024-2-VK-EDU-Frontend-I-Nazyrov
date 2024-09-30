@@ -1,27 +1,35 @@
-import messages from './db';
-import { render } from './render';
-
 const MESSAGES_KEY = 'messages';
 
-export function saveMessagesLS() {
-  localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
+export const getMessagesFromLocalStorage = () => {
+  try {
+    const storedMessages = JSON.parse(localStorage.getItem(MESSAGES_KEY));
+
+    return storedMessages || [];
+  } catch (error) {
+    console.error('Ошибка при получении сообщений из localStorage:', error);
+    return [];
+  }
+};
+
+export function addMessageToLocalStorage(message) {
+  try {
+    const messages = getMessagesFromLocalStorage();
+
+    messages.push(message);
+
+    localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
+  } catch (error) {
+    console.error('Ошибка при работе с localStorage: ', error);
+  }
 }
 
-export function loadMessagesLS() {
+export function setDefaultMessages() {
   const storedMessages = localStorage.getItem(MESSAGES_KEY);
-  if (storedMessages) {
-    try {
-      const parsedMessages = JSON.parse(storedMessages);
-      messages.push(...parsedMessages);
-    } catch (error) {
-      console.error('Ошибка при парсинге сообщений из localStorage:', error);
-    }
-  } else {
-    messages.push({
+  if (!storedMessages) {
+    addMessageToLocalStorage({
       name: 'Ярослав',
       text: 'Привет! Расскажи о себе?',
       time: '2024-09-25T11:50:01.205Z',
     });
   }
-  render();
 }
