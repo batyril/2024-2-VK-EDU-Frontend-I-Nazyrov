@@ -12,15 +12,11 @@ export const getMessagesFromLocalStorage = () => {
 };
 
 export function addMessageToLocalStorage(message) {
-  try {
-    const messages = getMessagesFromLocalStorage();
+  const messages = getMessagesFromLocalStorage();
 
-    messages.push(message);
+  messages.push(message);
 
-    localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
-  } catch (error) {
-    console.error('Ошибка при работе с localStorage: ', error);
-  }
+  localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
 }
 
 export function setDefaultMessages() {
