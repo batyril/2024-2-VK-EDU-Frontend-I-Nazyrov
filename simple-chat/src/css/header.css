@@ -1,0 +1,26 @@
+.header {
+  padding: 5px 10px;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  display: flex;
+  background-color: var(--green);
+  .header__avatar {
+    display: flex;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .header__back {
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .header__text {
+    color: var(--white);
+    text-align: center;
+  }
+  .header__username {
+    font-size: 17px;
+    font-weight: 600;
+  }
+}
