@@ -1,6 +1,6 @@
-import formatTime from './helper';
 import { ELEMENTS, scrollToForm } from './UI';
-import { getMessagesFromLocalStorage } from './localStorage';
+import { getMessagesFromLocalStorage, USER_KEY } from './localStorage';
+import { formatTime, getQueryParam } from './helper';
 
 export const createMessageBlock = ({ text, time, name }) => {
   const item = document.querySelector('#message').content.cloneNode(true);
@@ -18,9 +18,14 @@ export const createMessageBlock = ({ text, time, name }) => {
 };
 
 export const renderMessagesOnStart = () => {
+  const userId = getQueryParam(USER_KEY);
+  if (!userId) return;
+
   ELEMENTS.MESSAGE_LIST.innerHTML = '';
-  const messages = getMessagesFromLocalStorage();
-  messages.forEach((message) => {
+  const userData = getMessagesFromLocalStorage(userId);
+  ELEMENTS.USER_NAME.textContent = userData.name;
+
+  userData.messages.forEach((message) => {
     const messageBlock = createMessageBlock(message);
     ELEMENTS.MESSAGE_LIST.appendChild(messageBlock);
   });

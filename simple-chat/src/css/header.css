@@ -10,7 +10,7 @@
     object-fit: cover;
     border-radius: 50%;
   }
-  .header__back {
+  .header__icon {
     cursor: pointer;
     background: none;
     border: none;
