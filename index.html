@@ -2,55 +2,86 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <title>Send a message</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
-      rel="stylesheet"
-    />
-    <script type="module" crossorigin src="./assets/index-x1mfJbYr.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BpDee8dB.css">
+    <title>Список чатов</title>
+    <script type="module" crossorigin src="./assets/index-BlGZay5t.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CtF10XSs.css">
   </head>
   <body>
     <header class="header">
-      <button class="header__back">
-        <img src="./arrow_back.svg" alt="array" />
+      <button class="header__icon">
+        <img src="./icons/burger.svg" alt="array" />
       </button>
       <div class="header__text">
-        <p class="header__username">Ярослов Антонов</p>
+        <p class="header__username">Messenger</p>
       </div>
-      <img
-        width="40"
-        height="40"
-        class="header__avatar"
-        alt="avatar"
-        src="./images/avatar.png"
-      />
+      <button class="header__icon">
+        <img src="./icons/search.svg" alt="array" />
+      </button>
     </header>
     <main>
-      <form class="form" action="/simple-chat/public">
-        <input
-          class="form__input"
-          name="message-text"
-          placeholder="Введите сообщение"
-          type="text"
-        />
-        <button type="submit" class="form__send">
-          <img alt="send" src="./send.svg" />
-        </button>
-      </form>
-      <div class="message__list"></div>
+      <ul class="chat-list">
+        <a href="chat.html?userId=1" data-chat-id="1" class="chat-item">
+          <img
+            width="60"
+            height="60"
+            alt="avatar"
+            class="chat-item__image"
+            src="./images/pokemon.jpg"
+          />
+          <div class="chat-item__info">
+            <p class="chat-item__name">Покемон</p>
+            <p class="chat-item__message">Привет, че там по покемонам?</p>
+          </div>
+          <div class="chat-item__notifications">
+            <p class="chat-item__status">
+              <img alt="delivery status" src="./icons/delivered.svg" />
+            </p>
+            <p class="chat-item__time">12:51</p>
+          </div>
+        </a>
+        <a href="chat.html?userId=2" data-chat-id="2" class="chat-item">
+          <img
+            width="60"
+            height="60"
+            alt="avatar"
+            class="chat-item__image"
+            src="./images/dog.jpg"
+          />
+          <div class="chat-item__info">
+            <p class="chat-item__name">Шарик</p>
+            <p class="chat-item__message">Пошли мяч покидаем</p>
+          </div>
+          <div class="chat-item__notifications">
+            <p class="chat-item__status">
+              <img alt=" not read status" src="./icons/notRead.svg" />
+            </p>
+            <p class="chat-item__time">12:51</p>
+          </div>
+        </a>
+        <a href="chat.html?userId=3" data-chat-id="3" class="chat-item">
+          <img
+            width="60"
+            height="60"
+            alt="avatar"
+            class="chat-item__image"
+            src="./images/monkey.jpg"
+          />
+          <div class="chat-item__info">
+            <p class="chat-item__name">Биби</p>
+            <p class="chat-item__message">бананы у меня, спасибо за работу</p>
+          </div>
+          <div class="chat-item__notifications">
+            <p class="chat-item__status">
+              <img alt=" not read status" src="./icons/notRead.svg" />
+            </p>
+            <p class="chat-item__time">12:51</p>
+          </div>
+        </a>
+      </ul>
     </main>
-    <template id="message">
-      <div class="message__block">
-        <p class="message__name"></p>
-        <div class="message__wrapper">
-          <p class="message__text"></p>
-          <p class="message__time"></p>
-        </div>
-      </div>
-    </template>
+    <button class="create-chat">
+      <img alt="create-chat" src="./icons/pen.svg" />
+    </button>
   </body>
 </html>
