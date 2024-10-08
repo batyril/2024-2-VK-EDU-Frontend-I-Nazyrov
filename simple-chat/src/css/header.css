@@ -5,12 +5,8 @@
   height: 60px;
   display: flex;
   background-color: var(--green);
-  .header__avatar {
-    display: flex;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-  .header__back {
+
+  .header__icon {
     cursor: pointer;
     background: none;
     border: none;
