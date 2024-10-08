@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@dicebear/collection": "^9.2.2",
-    "@dicebear/core": "^9.2.2",
-    "@dicebear/fun-emoji": "^9.2.2"
+    "@dicebear/core": "^9.2.2"
   }
 }
