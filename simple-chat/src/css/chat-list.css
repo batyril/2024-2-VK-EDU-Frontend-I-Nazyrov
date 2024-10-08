@@ -14,11 +14,6 @@
   width: 100%;
   display: flex;
 
-  .chat-item__image {
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
   .chat-item__name {
     font-size: 16px;
     font-weight: 600;

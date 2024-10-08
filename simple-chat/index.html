@@ -19,68 +19,44 @@
       </button>
     </header>
     <main>
-      <ul class="chat-list">
-        <a href="chat.html?userId=1" data-chat-id="1" class="chat-item">
-          <img
-            width="60"
-            height="60"
-            alt="avatar"
-            class="chat-item__image"
-            src="/images/pokemon.jpg"
-          />
-          <div class="chat-item__info">
-            <p class="chat-item__name">Покемон</p>
-            <p class="chat-item__message">Привет, че там по покемонам?</p>
-          </div>
-          <div class="chat-item__notifications">
-            <p class="chat-item__status">
-              <img alt="delivery status" src="/icons/delivered.svg" />
-            </p>
-            <p class="chat-item__time">12:51</p>
-          </div>
-        </a>
-        <a href="chat.html?userId=2" data-chat-id="2" class="chat-item">
-          <img
-            width="60"
-            height="60"
-            alt="avatar"
-            class="chat-item__image"
-            src="/images/dog.jpg"
-          />
-          <div class="chat-item__info">
-            <p class="chat-item__name">Шарик</p>
-            <p class="chat-item__message">Пошли мяч покидаем</p>
-          </div>
-          <div class="chat-item__notifications">
-            <p class="chat-item__status">
-              <img alt=" not read status" src="/icons/notRead.svg" />
-            </p>
-            <p class="chat-item__time">12:51</p>
-          </div>
-        </a>
-        <a href="chat.html?userId=3" data-chat-id="3" class="chat-item">
-          <img
-            width="60"
-            height="60"
-            alt="avatar"
-            class="chat-item__image"
-            src="/images/monkey.jpg"
-          />
-          <div class="chat-item__info">
-            <p class="chat-item__name">Биби</p>
-            <p class="chat-item__message">бананы у меня, спасибо за работу</p>
-          </div>
-          <div class="chat-item__notifications">
-            <p class="chat-item__status">
-              <img alt=" not read status" src="/icons/notRead.svg" />
-            </p>
-            <p class="chat-item__time">12:51</p>
-          </div>
-        </a>
-      </ul>
+      <ul class="chat-list"></ul>
     </main>
     <button class="create-chat">
       <img alt="create-chat" src="/icons/pen.svg" />
     </button>
+    <dialog id="chat-dialog">
+      <form method="dialog">
+        <h2>Создать новый чат</h2>
+        <label for="username">
+          <input
+            class="form__input"
+            placeholder="Введите имя:"
+            type="text"
+            id="username"
+            name="username"
+            required
+          />
+        </label>
+
+        <div class="dialog-buttons">
+          <button type="submit">Создать</button>
+          <button type="button" id="close-dialog">Отмена</button>
+        </div>
+      </form>
+    </dialog>
+    <template id="chat">
+      <a href="chat.html?userId=3" class="chat-item">
+        <div class="chat-item__info">
+          <p class="chat-item__name"></p>
+          <p class="chat-item__message"></p>
+        </div>
+        <div class="chat-item__notifications">
+          <p class="chat-item__status">
+            <img alt=" not read status" src="/icons/notRead.svg" />
+          </p>
+          <p class="chat-item__time"></p>
+        </div>
+      </a>
+    </template>
   </body>
 </html>
