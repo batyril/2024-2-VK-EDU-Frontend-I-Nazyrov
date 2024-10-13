@@ -6,7 +6,7 @@ import {
 } from './helper';
 
 export const USER_KEY = 'userId';
-export const MESSAGES_KEY = 'MESSAGES';
+export const MESSAGES_KEY = 'CHATS';
 
 export const getChatByUserId = (userId) => {
   try {
