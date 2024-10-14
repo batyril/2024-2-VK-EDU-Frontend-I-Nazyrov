@@ -1,8 +1,11 @@
 import { ELEMENTS, scrollToForm } from './UI';
-import { addMessageToLocalStorage } from './localStorage';
+import {
+  addMessageToLocalStorage,
+  addUserToLocalStorage,
+} from './localStorage';
 import { renderOneMessage } from './render';
 
-function handleSubmit(event) {
+export const handleSubmitMessages = (event) => {
   event.preventDefault();
   const time = new Date();
   const text = ELEMENTS.INPUT.value;
@@ -15,6 +18,13 @@ function handleSubmit(event) {
   renderOneMessage(message);
   scrollToForm();
   event.target.reset();
-}
+};
 
-export default handleSubmit;
+export const handleChatDialogSubmit = (event) => {
+  event.preventDefault();
+  const username = event.target.elements.username.value;
+  if (username) {
+    const { userId } = addUserToLocalStorage(username);
+    window.location.href = `chat.html?userId=${userId}`;
+  }
+};
