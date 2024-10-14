@@ -25,6 +25,6 @@ export const handleChatDialogSubmit = (event) => {
   const username = event.target.elements.username.value;
   if (username) {
     const { userId } = addUserToLocalStorage(username);
-    window.location.href = `/chat.html?userId=${userId}`;
+    window.location.href = `chat.html?userId=${userId}`;
   }
 };
