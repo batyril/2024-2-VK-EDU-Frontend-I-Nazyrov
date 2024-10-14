@@ -8,12 +8,4 @@
   bottom: 10px;
   right: 10px;
   background-color: var(--green);
-  transition: all 0.3s;
-}
-
-.create-chat:hover {
-  background-color: var(--green-hover);
-}
-.create-chat:active {
-  background-color: var(--green);
 }

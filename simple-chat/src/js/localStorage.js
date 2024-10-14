@@ -49,4 +49,5 @@ export const addUserToLocalStorage = (
   usersData.push(user);
 
   saveToLocalStorage(MESSAGES_KEY, usersData);
+  return user;
 };
