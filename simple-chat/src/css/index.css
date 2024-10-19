@@ -5,6 +5,8 @@
 @import 'chat-list.css';
 @import 'create-chat.css';
 @import 'modal.css';
+@import 'animation.css';
+
 html {
   font-family: 'Roboto', sans-serif;
   box-sizing: border-box;

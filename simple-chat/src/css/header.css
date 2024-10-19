@@ -5,11 +5,23 @@
   height: 60px;
   display: flex;
   background-color: var(--green);
-
+  .header__back {
+    transform: translateX(3px);
+  }
   .header__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     background: none;
     border: none;
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
   .header__text {
     color: var(--white);
