@@ -1,63 +1,13 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Список чатов</title>
-    <script type="module" crossorigin src="./assets/index-5NjBXgMP.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-iRBB8p7Z.css">
+    <title>Chat</title>
+    <script type="module" crossorigin src="/2024-2-VK-EDU-Frontend-I-Nazyrov/assets/index-C1fKn2o7.js"></script>
+    <link rel="stylesheet" crossorigin href="/2024-2-VK-EDU-Frontend-I-Nazyrov/assets/index-CqxhIqtb.css">
   </head>
   <body>
-    <header class="header">
-      <button class="header__icon">
-        <img src="./icons/burger.svg" alt="array" />
-      </button>
-      <div class="header__text">
-        <p class="header__username">Messenger</p>
-      </div>
-      <button class="header__icon">
-        <img src="./icons/search.svg" alt="array" />
-      </button>
-    </header>
-    <main>
-      <ul class="chat-list"></ul>
-    </main>
-    <button class="create-chat">
-      <img alt="create-chat" src="./icons/pen.svg" />
-    </button>
-    <dialog id="chat-dialog">
-      <form method="dialog">
-        <h2>Создать новый чат</h2>
-        <label for="username">
-          <input
-            class="form__input"
-            placeholder="Введите имя:"
-            type="text"
-            id="username"
-            name="username"
-            required
-          />
-        </label>
-
-        <div class="dialog-buttons">
-          <button type="submit">Создать</button>
-          <button type="button" id="close-dialog">Отмена</button>
-        </div>
-      </form>
-    </dialog>
-    <template id="chat">
-      <a href="chat.html?userId=3" class="chat-item">
-        <div class="chat-item__info">
-          <p class="chat-item__name"></p>
-          <p class="chat-item__message"></p>
-        </div>
-        <div class="chat-item__notifications">
-          <p class="chat-item__status">
-            <img alt=" not read status" src="./icons/notRead.svg" />
-          </p>
-          <p class="chat-item__time"></p>
-        </div>
-      </a>
-    </template>
+    <div id="root"></div>
   </body>
 </html>
