@@ -1,0 +1,22 @@
+@use "./variables"  as *;
+@use "reset.css";
+
+html {
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: $green;
+  margin: 0;
+  color: #333;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+}

@@ -1,0 +1,40 @@
+@use './variables' as *;
+
+@mixin effects-icon {
+  border-radius: 50%;
+  transition:
+    border-radius 0.3s ease-in-out,
+    transform 0.3s ease-in-out,
+    background-color 0.3s ease-in-out;
+
+  &:hover {
+    background-color: rgba(211, 211, 211, 0.3);
+  }
+
+  &:active {
+    transform: scale(1.1);
+  }
+}
+
+@mixin effects-button {
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: $green-hover;
+  }
+
+  &:active {
+    background-color: $green;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
