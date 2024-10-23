@@ -1,0 +1,38 @@
+@use '../../scss/variables' as *;
+@use '../../scss/animation' as *;
+
+.modal {
+  border: none;
+  border-radius: 8px;
+  padding: 35px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  h2 {
+    font-size: 24px;
+    margin-bottom: 25px;
+  }
+  input {
+    font-size: 15px;
+    padding: 13px;
+    height: 46px;
+    border-radius: 15px 15px 0 15px;
+    border: 1px solid #00000033;
+    outline: none;
+    width: 100%;
+  }
+
+  &__buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      @include effects-button;
+      padding: 10px;
+      color: $white;
+      border-radius: 5px;
+      border: none;
+      background-color: $green;
+      cursor: pointer;
+    }
+  }
+}

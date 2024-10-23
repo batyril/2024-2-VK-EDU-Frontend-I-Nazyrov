@@ -6,6 +6,7 @@
   align-items: flex-end;
   padding: 10px 0;
   .message__block {
+    animation: fadeIn 0.5s ease-out;
     background: var(--white);
     border-radius: 15px 15px 0 15px;
     padding: 10px;
@@ -30,6 +31,7 @@
     display: flex;
     gap: 10px;
     justify-content: space-between;
+    align-items: flex-end;
   }
   .message__text {
     overflow-wrap: break-word;

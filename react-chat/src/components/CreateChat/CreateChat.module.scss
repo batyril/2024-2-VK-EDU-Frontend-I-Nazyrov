@@ -1,0 +1,41 @@
+@use '../../scss/variables' as *;
+
+.createChat {
+  &__button {
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 70px;
+    height: 70px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: $green;
+  }
+
+  &__edit {
+    color: $white;
+  }
+}
+
+.pulse {
+  background: $green;
+  cursor: pointer;
+  box-shadow: $green-hover;
+  animation: pulse 2s infinite;
+}
+.pulse:hover {
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(3, 151, 137, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(3, 151, 137, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(3, 151, 137, 0);
+  }
+}

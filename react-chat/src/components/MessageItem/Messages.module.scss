@@ -1,0 +1,50 @@
+@use '../../scss/variables' as *;
+@use '../../scss/animation' as *;
+
+.message {
+  &__wrapper {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  &__text {
+    overflow-wrap: break-word;
+    width: 85%;
+    font-size: 15px;
+  }
+  &__name {
+    overflow-wrap: break-word;
+    width: 90%;
+    font-weight: 300;
+    font-size: 13px;
+  }
+  &__time {
+    transform: translateY(5px);
+    font-size: 12px;
+    font-weight: 300;
+  }
+  &__block {
+    animation: fadeIn 0.5s ease-out;
+    background: $white;
+    border-radius: 15px 15px 0 15px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    font-size: 15px;
+    max-width: 90%;
+
+    &Other {
+      background-color: $grey;
+      align-self: flex-start;
+      border-radius: 15px 15px 15px 0;
+    }
+    &Me {
+      background-color: #d1eee2;
+      .message__name {
+        display: none;
+      }
+      border-radius: 15px 15px 0 15px;
+    }
+  }
+}

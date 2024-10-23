@@ -8,21 +8,21 @@
   </head>
   <body>
     <header class="header">
-      <button class="header__icon">
+      <div class="header__icon effects-icon">
         <img src="/icons/burger.svg" alt="array" />
-      </button>
+      </div>
       <div class="header__text">
         <p class="header__username">Messenger</p>
       </div>
-      <button class="header__icon">
+      <div class="header__icon effects-icon">
         <img src="/icons/search.svg" alt="array" />
-      </button>
+      </div>
     </header>
     <main>
       <ul class="chat-list"></ul>
     </main>
-    <button class="create-chat">
-      <img alt="create-chat" src="/icons/pen.svg" />
+    <button class="create-chat pulse">
+      <img alt="create-chat effects-button" src="/icons/pen.svg" />
     </button>
     <dialog id="chat-dialog">
       <form method="dialog">
@@ -39,8 +39,10 @@
         </label>
 
         <div class="dialog-buttons">
-          <button type="submit">Создать</button>
-          <button type="button" id="close-dialog">Отмена</button>
+          <button class="effects-button" type="submit">Создать</button>
+          <button class="effects-button" type="button" id="close-dialog">
+            Отмена
+          </button>
         </div>
       </form>
     </dialog>

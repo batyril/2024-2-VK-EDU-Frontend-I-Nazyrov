@@ -1,14 +1,27 @@
+@use "../../scss/variables"  as *;
+@use "../../scss/animation"  as *;
+
 .header {
   padding: 5px 10px;
   justify-content: space-between;
   align-items: center;
   height: 60px;
   display: flex;
-  background-color: var(--green);
-  .header__back {
+  background-color: $green;
+  &__back {
+    color: $white;
     transform: translateX(3px);
   }
-  .header__icon {
+
+  &__search {
+    color: $white;
+  }
+
+  &__menu {
+    color: $white;
+  }
+
+  &__icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -17,17 +30,13 @@
     cursor: pointer;
     background: none;
     border: none;
-    a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    @include effects-icon;
   }
-  .header__text {
-    color: var(--white);
+  &__text {
+    color: $white;
     text-align: center;
   }
-  .header__username {
+  &__username {
     font-size: 17px;
     font-weight: 600;
   }
