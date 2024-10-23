@@ -5,4 +5,11 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: '/2024-2-VK-EDU-Frontend-I-Nazyrov/',
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      input: {
+        main: 'src/main.jsx',
+      },
+    },
+  },
 });
