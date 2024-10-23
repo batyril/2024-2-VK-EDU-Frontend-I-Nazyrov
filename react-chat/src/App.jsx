@@ -10,8 +10,6 @@ function App() {
   const [activeChat, setActiveChat] = useState(null);
   const { chats, setChats } = useChats();
 
-  console.log(chats, '@chats app');
-  console.log(activeChat, 'activeChat');
   const chat = chats.find((chat) => chat.userId === activeChat);
 
   return (
