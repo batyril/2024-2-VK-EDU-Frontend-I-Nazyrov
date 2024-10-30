@@ -9,6 +9,10 @@
   height: calc(100dvh - 60px);
 }
 
+.message__empty {
+  margin: 0 auto;
+}
+
 .message__list {
   flex-grow: 1;
   align-items: flex-end;

@@ -2,18 +2,26 @@ import SendMessagesForm from '../../components/SendMessageForm';
 import * as styles from './PageChat.module.scss';
 import Header from '../../components/Header/Chat.jsx';
 import Messages from '../../components/MessageItem/index.js';
+import { useParams } from 'react-router-dom';
 
-function PageChat({ setCurrentPage, chat }) {
+function PageChat({ chats }) {
+  let { chatId } = useParams();
+  const currentChat = chats.find((chat) => String(chat.userId) === chatId);
+
   return (
     <>
-      <Header img={chat.img} setCurrentPage={setCurrentPage} />
+      <Header name={currentChat.name} img={currentChat.img} />
       <main className={styles.chat}>
         <div className={styles.message__list}>
-          {chat.messages.map(({ name, text, time }) => (
-            <Messages name={name} key={name} text={text} time={time} />
-          ))}
+          {currentChat.messages.length > 0 ? (
+            currentChat.messages.map(({ name, text, time }, index) => (
+              <Messages name={name} key={index} text={text} time={time} />
+            ))
+          ) : (
+            <p className={styles.message__empty}> сообщений пока нет </p>
+          )}
         </div>
-        <SendMessagesForm userId={chat.userId} />
+        <SendMessagesForm userId={currentChat.userId} />
       </main>
     </>
   );

@@ -1,14 +1,16 @@
 import * as styles from './Header.module.scss';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import PAGES from '../../const/pages.js';
+import { Link } from 'react-router-dom';
 
-function Header({ name, img, setCurrentPage }) {
+function Header({ name, img }) {
   return (
     <header className={styles.header}>
       <div className={styles.header__icon}>
-        <ArrowBackIos
-          onClick={() => setCurrentPage('ChatList')}
-          className={styles.header__back}
-        />
+        <Link to={PAGES.CHAT_LIST}>
+          {' '}
+          <ArrowBackIos className={styles.header__back} />
+        </Link>
       </div>
       <div className={styles.header__text}>
         <p className={styles.header__username}>{name}</p>

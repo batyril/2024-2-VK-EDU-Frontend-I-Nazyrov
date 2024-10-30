@@ -4,7 +4,7 @@ import { useContext, useState } from 'react';
 import { ChatContext } from '../../context/chats.js';
 
 function SendMessagesForm({ userId }) {
-  const { setChats } = useContext(ChatContext);
+  const { setUserData } = useContext(ChatContext);
   const [inputText, setInputText] = useState('');
   const handeSubmit = (e) => {
     e.preventDefault();
@@ -15,16 +15,19 @@ function SendMessagesForm({ userId }) {
       time: Date.now(),
     };
 
-    setChats((prevChats) => {
-      prevChats.map((chat) => {
+    setUserData((prevData) => {
+      const updatedChats = prevData.chats.map((chat) => {
         if (chat.userId === userId) {
           chat.messages.push(newMessage);
         }
         return chat;
       });
-      return [...prevChats];
-    });
 
+      return {
+        ...prevData,
+        chats: updatedChats,
+      };
+    });
     setInputText('');
   };
 

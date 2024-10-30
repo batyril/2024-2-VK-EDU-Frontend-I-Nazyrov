@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import generateAvatar from '../../helpers/createAvatar.js';
 
 export function ChatModal({ showModal, onClose }) {
-  const { setChats } = useContext(ChatContext);
+  const { setUserData } = useContext(ChatContext);
   const uniqueId = uuidv4();
   const dialogRef = useRef(null);
   const [inputText, setInputText] = useState('');
@@ -27,7 +27,10 @@ export function ChatModal({ showModal, onClose }) {
       messages: [],
       img: generateAvatar(inputText),
     };
-    setChats((prevChats) => [...prevChats, newChat]);
+    setUserData((prevData) => ({
+      ...prevData,
+      chats: [...prevData.chats, newChat],
+    }));
     onClose();
   };
 
