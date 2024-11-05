@@ -1,0 +1,24 @@
+@use '../../scss/variables' as *;
+
+.chat {
+  flex-direction: column;
+  border-radius: 15px 15px 0 0;
+  background-color: $white;
+  padding: 10px;
+  display: flex;
+  height: calc(100dvh - 60px);
+}
+
+.message__list {
+  flex-grow: 1;
+  align-items: flex-end;
+  justify-content: flex-end;
+  overflow-y: scroll;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  padding: 10px 0;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

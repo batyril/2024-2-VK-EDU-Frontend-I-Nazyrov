@@ -1,0 +1,59 @@
+.effects-icon {
+  border-radius: 50%;
+  transition:
+    border-radius,
+    transform,
+    background-color 0.3s ease-in-out;
+}
+
+.effects-icon:hover {
+  background-color: rgba(211, 211, 211, 0.3);
+}
+
+.effects-icon:active {
+  transform: scale(1.1);
+}
+
+.effects-button {
+  transition: background-color 0.3s;
+}
+
+.effects-button:hover {
+  background-color: var(--green-hover);
+}
+.effects-button:active {
+  background-color: var(--green);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px); /* Сообщение появится немного снизу */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pulse {
+  background: var(--green);
+  cursor: pointer;
+  box-shadow: var(--green-hover);
+  animation: pulse 2s infinite;
+}
+.pulse:hover {
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(3, 151, 137, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(3, 151, 137, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(3, 151, 137, 0);
+  }
+}

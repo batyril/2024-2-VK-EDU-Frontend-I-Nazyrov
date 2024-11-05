@@ -3,7 +3,7 @@ import {
   addMessageToLocalStorage,
   addUserToLocalStorage,
 } from './localStorage';
-import { renderChatOnStart, renderOneMessage } from './render';
+import { renderOneMessage } from './render';
 
 export const handleSubmitMessages = (event) => {
   event.preventDefault();
@@ -24,8 +24,7 @@ export const handleChatDialogSubmit = (event) => {
   event.preventDefault();
   const username = event.target.elements.username.value;
   if (username) {
-    addUserToLocalStorage(username);
-    ELEMENTS.CHAT_DIALOG.close();
-    renderChatOnStart();
+    const { userId } = addUserToLocalStorage(username);
+    window.location.href = `chat.html?userId=${userId}`;
   }
 };
