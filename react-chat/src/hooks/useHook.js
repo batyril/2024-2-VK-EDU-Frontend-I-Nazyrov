@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 const initialChats = {
   user: {
-    id: 'user123',
+    id: 'user1231',
     name: 'Ильназ',
     surname: 'Назыров',
     username: 'User123',
