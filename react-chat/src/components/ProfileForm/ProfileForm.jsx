@@ -1,92 +1,106 @@
 import * as styles from './ProfileForm.module.scss';
 import { useContext, useState } from 'react';
 import { ChatContext } from '../../context/chats.js';
+import useFormValidation from '../../hooks/useFormValidation';
+import validateProfileForm from '../../helpers/validateProfileForm';
+import ErrorMessage from '../../ErrorMessage/ErrorMessage.jsx';
 
 function ProfileForm() {
   const { userData, setUserData } = useContext(ChatContext);
   const { name, surname, username, bio } = userData.user;
+
   const [formValues, setFormValues] = useState({
     name: name || '',
     surname: surname || '',
     username: username || '',
     bio: bio || '',
   });
+  const [isDirty, setIsDirty] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+
+  const { errors, validateValues, clearFieldError, clearErrors } =
+    useFormValidation(formValues, validateProfileForm);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prevValues) => ({
       ...prevValues,
-      [name]: value,
+      [name]: value.trim(),
     }));
+
+    clearFieldError(name);
+
+    setIsDirty(true);
   };
 
   const handleReset = () => {
     setFormValues({ name: '', surname: '', username: '', bio: '' });
+    setIsDirty(true);
+    clearErrors();
+    setIsSaved(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!validateValues(formValues)) return;
+
     setUserData((prevData) => ({
       ...prevData,
       user: {
         ...prevData.user,
-        name: formValues.name,
-        surname: formValues.surname,
-        username: formValues.username,
-        bio: formValues.bio,
+        ...formValues,
       },
     }));
+    setIsDirty(false);
+    setIsSaved(true);
+
+    setTimeout(() => {
+      setIsSaved(false);
+    }, 3000);
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form noValidate className={styles.form} onSubmit={handleSubmit}>
       <label className={styles.label}>
-        Имя
+        Имя*
         <input
-          minLength={2}
-          required
           className={styles.input}
           name='name'
           value={formValues.name}
           onChange={handleChange}
-          maxLength={150}
         />
+        <ErrorMessage message={errors.name} />
       </label>
       <label className={styles.label}>
-        Фамилия
+        Фамилия*
         <input
-          minLength={2}
-          required
           className={styles.input}
           name='surname'
           value={formValues.surname}
           onChange={handleChange}
-          maxLength={150}
         />
+        <ErrorMessage message={errors.surname} />
       </label>
       <label className={styles.label}>
-        username
+        username*
         <input
-          minLength={2}
-          required
           className={styles.input}
           name='username'
           value={formValues.username}
           onChange={handleChange}
-          maxLength={150}
         />
+        <ErrorMessage message={errors.username} />
       </label>
       <label className={styles.label}>
-        bio
+        bio*
         <textarea
-          minLength={5}
-          required
           className={styles.input}
           name='bio'
           value={formValues.bio}
           onChange={handleChange}
-          maxLength={450}
         />
+        <ErrorMessage message={errors.bio} />
       </label>
       <div className={styles.buttons}>
         <button
@@ -96,10 +110,15 @@ function ProfileForm() {
         >
           Очистить
         </button>
-        <button className={styles.submitButton} type='submit'>
+        <button
+          disabled={!isDirty}
+          className={styles.submitButton}
+          type='submit'
+        >
           Сохранить
         </button>
       </div>
+      {isSaved && <p className={styles.successMessage}>Сохранено успешно!</p>}
     </form>
   );
 }

@@ -16,13 +16,9 @@
 .message__list {
   flex-grow: 1;
   align-items: flex-end;
-  justify-content: flex-end;
-  overflow-y: scroll;
   display: flex;
   gap: 5px;
   flex-direction: column;
   padding: 10px 0;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  overflow-y: auto;
 }

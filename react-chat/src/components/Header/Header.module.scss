@@ -1,5 +1,5 @@
-@use "../../scss/variables"  as *;
-@use "../../scss/animation"  as *;
+@use '../../scss/variables' as *;
+@use '../../scss/animation' as *;
 
 .header {
   padding: 5px 10px;
@@ -22,6 +22,7 @@
   }
 
   &__icon {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,6 +31,9 @@
     cursor: pointer;
     background: none;
     border: none;
+    & > a {
+      height: 24px;
+    }
     @include effects-icon;
   }
   &__text {
@@ -37,7 +41,15 @@
     text-align: center;
   }
   &__username {
+    padding: 0 15px;
     font-size: 17px;
     font-weight: 600;
+    word-break: break-all;
+    white-space: pre-wrap;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
   }
 }

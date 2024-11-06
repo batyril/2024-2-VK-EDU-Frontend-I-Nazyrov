@@ -1,8 +1,8 @@
-import * as styles from './PageProfile.module.scss';
-import Header from '../../components/Header/Chat.jsx';
+import * as styles from './profile.module.scss';
+import Header from '../../components/Header/Profile.jsx';
 import ProfileForm from '../../components/ProfileForm/index.js';
 
-function PageProfile({ details }) {
+function Profile({ details }) {
   return (
     <>
       <Header name={'Профиль'} img={details.img} />
@@ -13,4 +13,4 @@ function PageProfile({ details }) {
   );
 }
 
-export default PageProfile;
+export default Profile;

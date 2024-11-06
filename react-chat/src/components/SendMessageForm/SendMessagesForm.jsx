@@ -6,12 +6,19 @@ import { ChatContext } from '../../context/chats.js';
 function SendMessagesForm({ userId }) {
   const { setUserData } = useContext(ChatContext);
   const [inputText, setInputText] = useState('');
+
   const handeSubmit = (e) => {
     e.preventDefault();
 
+    const trimmedInputText = inputText.trim();
+
+    if (!trimmedInputText) {
+      return;
+    }
+
     const newMessage = {
       name: 'me',
-      text: inputText,
+      text: trimmedInputText,
       time: Date.now(),
     };
 
@@ -40,8 +47,10 @@ function SendMessagesForm({ userId }) {
       onSubmit={handeSubmit}
       className={styles.form}
       action='/simple-chat/public'
+      noValidate
     >
       <input
+        autoComplete='off'
         required
         onChange={handleChange}
         value={inputText}

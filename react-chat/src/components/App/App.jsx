@@ -1,10 +1,11 @@
-import PageChatList from '../../pages/PageChatList/index.js';
-import PageChat from '../../pages/PageChat/index.js';
+import ChatList from '../../pages/chatList/index.js';
+import Messages from '../../pages/messages/index.js';
 import { ChatContext } from '../../context/chats.js';
 import PAGES from '../../const/pages.js';
 import { useChats } from '../../hooks/useHook.js';
 import { Route, Routes } from 'react-router-dom';
-import PageProfile from '../../pages/pageProfile/index.js';
+import Profile from '../../pages/profile/index.js';
+import NotFound from '../../pages/notFound/notFound.jsx';
 
 function App() {
   const { userData, setUserData } = useChats();
@@ -13,16 +14,17 @@ function App() {
       <Routes>
         <Route
           path={PAGES.CHAT_LIST}
-          element={<PageChatList chats={userData.chats} />}
+          element={<ChatList chats={userData.chats} />}
         />
         <Route
           path={PAGES.CHAT_DETAIL}
-          element={<PageChat chats={userData.chats} />}
+          element={<Messages chats={userData.chats} />}
         />
         <Route
           path={PAGES.PROFILE}
-          element={<PageProfile details={userData.user} />}
+          element={<Profile details={userData.user} />}
         />
+        <Route path={PAGES.NOT_FOUND} element={<NotFound />}></Route>
       </Routes>
     </ChatContext.Provider>
   );

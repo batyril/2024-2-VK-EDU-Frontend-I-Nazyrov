@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom';
 
 function ChatItem({ name, userId, img, text, time }) {
   return (
-    <Link to={`/${userId}`}>
+    <Link to={`/chat/${userId}`}>
       <div className={styles.chat__item}>
         <img src={img} alt='avatart' className={styles.chat__img} />
         <div className='chat-item__info'>
           <p className={styles.chat__name}>{name}</p>
-          <p className='chat-item__message'>{text}</p>
+          <p className={styles.chat__message}>{text}</p>
         </div>
         {text && (
           <div className={styles.chat__notifications}>

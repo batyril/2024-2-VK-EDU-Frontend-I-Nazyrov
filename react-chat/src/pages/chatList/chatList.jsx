@@ -1,9 +1,9 @@
 import ChatItem from '../../components/ChatItem/ChatItem.jsx';
-import * as styles from './PageChatList.module.scss';
+import * as styles from './chatList.module.scss';
 import Header from '../../components/Header/ChatList.jsx';
 import CreateChat from '../../components/CreateChat/index.js';
 
-function PageChatList({ chats }) {
+function ChatList({ chats }) {
   return (
     <>
       <Header />
@@ -30,4 +30,4 @@ function PageChatList({ chats }) {
   );
 }
 
-export default PageChatList;
+export default ChatList;

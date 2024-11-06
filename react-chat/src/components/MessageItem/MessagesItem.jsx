@@ -1,8 +1,8 @@
-import * as styles from './Messages.module.scss';
+import * as styles from './MessagesItem.module.scss';
 import formatTime from '../../helpers/FormatTime.js';
 import clsx from 'clsx';
 
-function Messages({ name, text, time }) {
+function MessagesItem({ name, text, time }) {
   return (
     <div
       className={clsx(
@@ -18,4 +18,4 @@ function Messages({ name, text, time }) {
   );
 }
 
-export default Messages;
+export default MessagesItem;

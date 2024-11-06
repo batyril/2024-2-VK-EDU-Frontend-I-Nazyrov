@@ -23,6 +23,13 @@
   border: 1px solid #00000033;
   outline: none;
   width: 100%;
+  resize: none;
+  &:hover {
+    border: 1px solid $green-hover;
+  }
+  &:focus {
+    border: 1px solid $green-hover;
+  }
 }
 
 .buttons {
@@ -39,6 +46,13 @@
   border: none;
   background-color: $green;
   cursor: pointer;
+
+  // Стили для состояния disabled
+  &:disabled {
+    background-color: $grey;
+    color: $dark;
+    cursor: not-allowed;
+  }
 }
 
 .resetButton {
@@ -48,4 +62,11 @@
   border: none;
   background-color: $grey;
   cursor: pointer;
+}
+
+.successMessage {
+  color: green;
+  font-size: 0.9em;
+  margin-top: 8px;
+  text-align: center;
 }

@@ -25,11 +25,26 @@
     }
   }
 
+  &__message {
+    word-break: break-all;
+    white-space: pre-wrap;
+    max-width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+
   &__name {
+    word-break: break-all;
     text-decoration: none;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 
   &__notifications {
