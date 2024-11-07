@@ -4,27 +4,37 @@ import { useContext, useState } from 'react';
 import { ChatContext } from '../../context/chats.js';
 
 function SendMessagesForm({ userId }) {
-  const { setChats } = useContext(ChatContext);
+  const { setUserData } = useContext(ChatContext);
   const [inputText, setInputText] = useState('');
+
   const handeSubmit = (e) => {
     e.preventDefault();
 
+    const trimmedInputText = inputText.trim();
+
+    if (!trimmedInputText) {
+      return;
+    }
+
     const newMessage = {
       name: 'me',
-      text: inputText,
+      text: trimmedInputText,
       time: Date.now(),
     };
 
-    setChats((prevChats) => {
-      prevChats.map((chat) => {
+    setUserData((prevData) => {
+      const updatedChats = prevData.chats.map((chat) => {
         if (chat.userId === userId) {
           chat.messages.push(newMessage);
         }
         return chat;
       });
-      return [...prevChats];
-    });
 
+      return {
+        ...prevData,
+        chats: updatedChats,
+      };
+    });
     setInputText('');
   };
 
@@ -37,8 +47,10 @@ function SendMessagesForm({ userId }) {
       onSubmit={handeSubmit}
       className={styles.form}
       action='/simple-chat/public'
+      noValidate
     >
       <input
+        autoComplete='off'
         required
         onChange={handleChange}
         value={inputText}

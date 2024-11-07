@@ -1,1 +1,1 @@
-export { default } from './Messages.jsx';
+export { default } from './MessagesItem.jsx';
