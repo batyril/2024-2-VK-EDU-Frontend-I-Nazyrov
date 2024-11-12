@@ -6,6 +6,8 @@ import generateAvatar from '../../helpers/createAvatar.js';
 import useEscapeKey from '../../hooks/useEscapeKey.js';
 import useClickOutside from '../../hooks/useClickOutside.js';
 
+//TODO: вынести в отдельный компонент кнопки
+
 export function ChatModal({ showModal, onClose }) {
   const { setUserData } = useContext(ChatContext);
   const uniqueId = uuidv4();

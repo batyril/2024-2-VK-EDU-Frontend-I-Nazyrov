@@ -1,8 +1,11 @@
 const PAGES = {
   BASE: '/2024-2-VK-EDU-Frontend-I-Nazyrov/',
-  CHAT_LIST: '/',
-  CHAT_DETAIL: '/chat/:chatId',
+  CHAT_LIST: '/chats',
+  MESSAGES_LIST: '/chat/:chatId',
   PROFILE: '/profile',
+  LOGIN: '/login',
+  REGISTRATION: '/registration',
+  CONTACTS: '/contacts',
   NOT_FOUND: '*',
 };
 

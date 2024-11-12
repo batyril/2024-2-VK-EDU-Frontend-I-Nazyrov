@@ -1,0 +1,46 @@
+@use '../../scss/variables' as *;
+
+.chat {
+  &__img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__item {
+    color: $dark;
+    text-decoration: none;
+    border-radius: 15px;
+    cursor: pointer;
+    padding: 7px;
+    justify-content: flex-start;
+    gap: 20px;
+    width: 100%;
+    display: flex;
+    transition: background-color 0.1s ease-in-out;
+
+    &:hover {
+      background-color: $grey;
+    }
+  }
+
+  &__name {
+    word-break: break-all;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}
+.defaultAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-right: 10px;
+}

@@ -1,6 +1,6 @@
 # Домашнее задание №
 
-Прошу @martinkomitsky, @haseprogram, @kgrechin или @1MarBur1 проверить его.
+Прошу @martinkomitsky, @haseprogram, @kgrechin или @sh4rkizz проверить его.
 
 Что было сделано:
 * 

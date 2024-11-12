@@ -1,0 +1,31 @@
+@use '../../scss/variables' as *;
+
+.chat {
+  border-radius: 15px 15px 0 0;
+  background-color: $white;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  height: calc(100dvh - 60px);
+  &__list {
+    min-height: 740px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    & > a {
+      text-decoration: none;
+    }
+  }
+}
+
+.noChats {
+  font-size: 16px;
+  text-align: center;
+  margin: auto;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}

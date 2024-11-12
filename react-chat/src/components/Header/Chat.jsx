@@ -18,9 +18,9 @@ function Header({ name, img }) {
       <img
         width='40'
         height='40'
-        className='header__avatar'
-        alt='avatar'
         src={img}
+        alt='avatar'
+        className={styles.chat__img}
       />
     </header>
   );

@@ -1,0 +1,23 @@
+.form {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  align-items: center;
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  gap: 25px;
+  justify-content: space-between;
+}
+
+.successMessage {
+  color: green;
+  font-size: 0.9em;
+  margin-top: 8px;
+  text-align: center;
+}

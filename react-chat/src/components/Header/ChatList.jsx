@@ -4,7 +4,7 @@ import Search from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 import PAGES from '../../const/pages.js';
 
-function Header() {
+function Header({ text }) {
   return (
     <header className={styles.header}>
       <div className={styles.header__icon}>
@@ -13,7 +13,7 @@ function Header() {
         </Link>
       </div>
       <div className={styles.header__text}>
-        <p className={styles.header__username}>Список чатов</p>
+        <p className={styles.header__username}>{text}</p>
       </div>
       <div className={styles.header__icon}>
         <Search className={styles.header__search} />
