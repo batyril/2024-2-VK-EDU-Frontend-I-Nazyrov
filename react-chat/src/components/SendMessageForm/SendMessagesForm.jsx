@@ -1,7 +1,7 @@
 import * as styles from './SendMessagesForm.module.scss';
 import SendIcon from '@mui/icons-material/Send';
 import { useState, useRef } from 'react';
-import sendMessage from '../../API/messages/sendMessage';
+import sendMessage from '../../API/MESSAGES/sendMessage.js';
 
 function SendMessagesForm({ chatId }) {
   const [inputText, setInputText] = useState('');
