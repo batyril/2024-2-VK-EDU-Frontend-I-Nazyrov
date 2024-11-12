@@ -98,6 +98,7 @@ function RegistrationForm() {
         error={errors.username || error.username?.[0]}
       />
       <FormInput
+        type='password'
         label='пароль*'
         name='password'
         value={formValues.password}

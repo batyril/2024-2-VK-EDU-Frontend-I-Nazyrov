@@ -1,14 +1,17 @@
 import * as styles from './ContactsList.module.scss';
-import Header from '../../components/Header/ChatList.jsx';
-import CreateChat from '../../components/CreateChat/index.js';
+import Header from '../../components/Header/ContactList.jsx';
 import { useEffect, useState } from 'react';
 import getAllUsers from '../../API/USER/gelAllUsers.js';
 import Pagination from '../../components/Pagination/index.js';
 import usePagination from '../../hooks/usePagination.js';
 import ContactItem from '../../components/ContactItem/index.js';
 import Skeleton from '../../components/Skeleton/index.js';
+import PAGES from '../../const/pages.js';
+import { useNavigate } from 'react-router-dom';
 
 function ContactsList() {
+  const navigate = useNavigate();
+
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -24,6 +27,9 @@ function ContactsList() {
       setContacts(data.results);
       setTotalPages(Math.ceil(data.count / pageSize));
     } catch (err) {
+      if (err.message === 'Access token not found') {
+        navigate(PAGES.LOGIN);
+      }
       setError(err.message);
     } finally {
       setLoading(false);
@@ -68,7 +74,6 @@ function ContactsList() {
           onPrevious={previousPage}
         />
       </main>
-      <CreateChat />
     </>
   );
 }

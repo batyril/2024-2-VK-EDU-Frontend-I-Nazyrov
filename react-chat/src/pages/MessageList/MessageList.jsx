@@ -1,8 +1,8 @@
 import SendMessagesForm from '../../components/SendMessageForm';
 import * as styles from './MessageList.module.scss';
-import Header from '../../components/Header/Chat.jsx';
+import Header from '../../components/Header/MessageList.jsx';
 import MessagesItem from '../../components/MessageItem/index.js';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useAutoScrollToBottom from '../../hooks/useAutoScrollToBottom.js';
 import { useLayoutEffect, useState } from 'react';
 import getMessages from '../../API/MESSAGES/getMessages.js';
@@ -13,8 +13,11 @@ import createAvatar from '../../helpers/createAvatar.js';
 import Spinner from '../../components/Spinner/index.js';
 import { Player } from '@lottiefiles/react-lottie-player';
 import animate from '../../animation/message.json';
+import PAGES from '../../const/pages.js';
 
 function MessageList() {
+  const navigate = useNavigate();
+
   const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -40,6 +43,9 @@ function MessageList() {
       setUserDetail(userData);
       setChatInfo(chatData);
     } catch (err) {
+      if (err.message === 'Access token not found') {
+        navigate(PAGES.LOGIN);
+      }
       setError(err.message);
     } finally {
       setLoading(false);

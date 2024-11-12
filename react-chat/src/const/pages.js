@@ -3,7 +3,7 @@ const PAGES = {
   CHAT_LIST: '/chats',
   MESSAGES_LIST: '/chat/:chatId',
   PROFILE: '/profile',
-  LOGIN: '/login',
+  LOGIN: '/',
   REGISTRATION: '/registration',
   CONTACTS: '/contacts',
   NOT_FOUND: '*',

@@ -1,12 +1,15 @@
 import * as styles from './Profile.module.scss';
-import Header from '../../components/Header/Chat.jsx';
+import Header from '../../components/Header/MessageList.jsx';
 import { useEffect, useState } from 'react';
 import getCurrentUser from '../../API/USER/getCurrentUser.js';
 import { ProfileForm } from '../../components/Forms';
 import Spinner from '../../components/Spinner/index.js';
 import createAvatar from '../../helpers/createAvatar.js';
+import PAGES from '../../const/pages.js';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
+  const navigate = useNavigate();
   const [userDetail, setUserDetail] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,6 +22,9 @@ function Profile() {
         const data = await getCurrentUser();
         setUserDetail(data);
       } catch (err) {
+        if (err.message === 'Access token not found') {
+          navigate(PAGES.LOGIN);
+        }
         setError('Не удалось загрузить данные пользователя. Попробуйте позже.');
       } finally {
         setLoading(false);

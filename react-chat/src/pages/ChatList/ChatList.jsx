@@ -7,12 +7,13 @@ import getChats from '../../API/CHAT/getChats.js';
 import Skeleton from '../../components/Skeleton/index.js';
 import usePagination from '../../hooks/usePagination.js';
 import Pagination from '../../components/Pagination/index.js';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PAGES from '../../const/pages.js';
 import { Player } from '@lottiefiles/react-lottie-player';
 import animate from '../../animation/noChats.json';
 
 function ChatList() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [chats, setChats] = useState([]);
@@ -27,6 +28,9 @@ function ChatList() {
         setChats(data.results);
         setTotalPages(Math.ceil(data.count / pageSize));
       } catch (err) {
+        if (err.message === 'Access token not found') {
+          navigate(PAGES.LOGIN);
+        }
         setError(err.message);
       } finally {
         setLoading(false);
