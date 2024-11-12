@@ -8,7 +8,8 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  height: calc(100dvh - 60px);
+  overflow: auto;
+  height: calc(100vh - 60px);
   &__list {
     min-height: 740px;
     width: 100%;

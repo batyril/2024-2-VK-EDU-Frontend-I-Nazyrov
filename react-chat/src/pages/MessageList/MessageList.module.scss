@@ -6,7 +6,8 @@
   background-color: $white;
   padding: 10px;
   display: flex;
-  height: calc(100dvh - 60px);
+  overflow: auto;
+  height: calc(100vh - 60px);
 }
 
 .message__empty {

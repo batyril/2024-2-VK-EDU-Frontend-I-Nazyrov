@@ -24,7 +24,7 @@ function MessageList() {
   const [error, setError] = useState(null);
   const [chatInfo, setChatInfo] = useState(null);
   const [userDetail, setUserDetail] = useState(null);
-  const messagesEndRef = useAutoScrollToBottom([messages]);
+  // const messagesEndRef = useAutoScrollToBottom([messages]);
 
   useCentrifuge(chatId, setMessages);
 
@@ -90,7 +90,7 @@ function MessageList() {
                 Здесь пока нет сообщений. Начните общение!
               </div>
             ))}
-          <div ref={messagesEndRef} />
+          {/*<div ref={messagesEndRef} />*/}
         </div>
         <SendMessagesForm chatId={chatId} />
       </main>
