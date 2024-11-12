@@ -6,8 +6,6 @@ import loginUser from '../../API/USER/loginUser.js';
 import PAGES from '../../const/pages.js';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
-import useFormValidation from '../../hooks/useFormValidation.js';
-import validateProfileForm from '../../helpers/validateProfileForm.js';
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -18,10 +16,7 @@ function LoginForm() {
   const [isDirty, setIsDirty] = useState(false);
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
-  const { errors, validateValues, clearFieldError } = useFormValidation(
-    formValues,
-    validateProfileForm,
-  );
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prevValues) => ({
@@ -29,8 +24,6 @@ function LoginForm() {
       [name]: value.trim(),
     }));
     setError((prevErrors) => ({ ...prevErrors, [name]: '' }));
-
-    clearFieldError(name);
 
     setIsDirty(true);
   };
@@ -50,7 +43,9 @@ function LoginForm() {
       ) {
         setError(error.response.data);
       } else {
-        setError({ general: 'Ошибка входа. Попробуйте снова.' });
+        setError({
+          general: 'Не удалось войти в систему',
+        });
       }
     } finally {
       setLoading(false);
@@ -59,8 +54,6 @@ function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateValues(formValues)) return;
 
     await handleLoginUser();
     setIsDirty(false);
@@ -72,7 +65,7 @@ function LoginForm() {
         name='username'
         value={formValues.username}
         onChange={handleChange}
-        error={errors.username || error.username?.[0]}
+        error={error.username?.[0]}
         placeholder='Логин'
       />
       <FormInput
@@ -80,7 +73,7 @@ function LoginForm() {
         value={formValues.password}
         onChange={handleChange}
         type='password'
-        error={errors.password || error.password?.[0]}
+        error={error.password?.[0]}
         placeholder='Пароль'
       />
 
