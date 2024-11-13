@@ -66,6 +66,13 @@ const useCentrifuge = (chatId, setMessages) => {
       } catch (error) {
         console.error('Failed to initialize Centrifuge:', error);
       }
+      return () => {
+        return () => {
+          centrifuge.disconnect();
+          subscription.removeAllListeners();
+          subscription.unsubscribe();
+        };
+      };
     };
 
     initializeCentrifuge();

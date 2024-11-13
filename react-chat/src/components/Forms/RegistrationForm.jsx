@@ -18,7 +18,6 @@ function RegistrationForm() {
     password: '',
     bio: '',
   });
-  const [isDirty, setIsDirty] = useState(false);
   const [error, setError] = useState({});
   const { errors, validateValues, clearFieldError, clearErrors } =
     useFormValidation(formValues, validateProfileForm);
@@ -32,7 +31,6 @@ function RegistrationForm() {
 
     clearFieldError(name);
     setError((prevErrors) => ({ ...prevErrors, [name]: '' }));
-    setIsDirty(true);
   };
 
   const handleReset = () => {
@@ -43,7 +41,6 @@ function RegistrationForm() {
       password: '',
       bio: '',
     });
-    setIsDirty(false);
     clearErrors();
     setError({});
   };
@@ -71,7 +68,6 @@ function RegistrationForm() {
     if (!validateValues(formValues)) return;
 
     await handleRegisterUser();
-    setIsDirty(false);
   };
 
   return (
@@ -107,7 +103,7 @@ function RegistrationForm() {
       />
       <FormInput
         as='textarea'
-        label='bio*'
+        label='bio'
         name='bio'
         value={formValues.bio}
         onChange={handleChange}
@@ -116,12 +112,7 @@ function RegistrationForm() {
 
       <div className={styles.buttons}>
         <Button text='Очистить' onClick={handleReset} type='reset' />
-        <Button
-          isLoading={loading}
-          disabled={!isDirty}
-          text='Сохранить'
-          type='submit'
-        />
+        <Button isLoading={loading} text='Сохранить' type='submit' />
       </div>
       {error.general && <ErrorMessage message={error.general} />}
     </form>

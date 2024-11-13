@@ -14,7 +14,6 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
     username: '',
     bio: '',
   });
-  const [isDirty, setIsDirty] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -37,13 +36,10 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
     }));
 
     clearFieldError(name);
-
-    setIsDirty(true);
   };
 
   const handleReset = () => {
     setFormValues({ first_name: '', last_name: '', username: '', bio: '' });
-    setIsDirty(false);
     clearErrors();
     setIsSaved(false);
   };
@@ -71,7 +67,6 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
 
     await handleChangeUserDetails();
 
-    setIsDirty(false);
     setIsSaved(true);
   };
 
@@ -100,7 +95,7 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
       />
       <FormInput
         as='textarea'
-        label='bio*'
+        label='bio'
         name='bio'
         value={formValues.bio}
         onChange={handleChange}
@@ -108,12 +103,7 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
       />
       <div className={styles.buttons}>
         <Button text='Очистить' onClick={handleReset} type='reset' />
-        <Button
-          isLoading={loading}
-          disabled={!isDirty}
-          text='Сохранить'
-          type='submit'
-        />
+        <Button isLoading={loading} text='Сохранить' type='submit' />
       </div>
       {isSaved && <p className={styles.successMessage}>Сохранено успешно!</p>}
     </form>

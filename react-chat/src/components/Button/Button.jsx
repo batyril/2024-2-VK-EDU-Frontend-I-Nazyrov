@@ -11,6 +11,7 @@ export const Button = ({
 }) => {
   return (
     <button
+      tabIndex='0'
       onClick={handleClick}
       className={styles.button}
       type={type}

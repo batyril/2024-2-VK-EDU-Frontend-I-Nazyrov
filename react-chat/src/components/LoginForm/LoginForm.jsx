@@ -13,7 +13,6 @@ function LoginForm() {
     username: '',
     password: '',
   });
-  const [isDirty, setIsDirty] = useState(false);
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -24,8 +23,6 @@ function LoginForm() {
       [name]: value.trim(),
     }));
     setError((prevErrors) => ({ ...prevErrors, [name]: '' }));
-
-    setIsDirty(true);
   };
 
   const handleLoginUser = async () => {
@@ -56,7 +53,6 @@ function LoginForm() {
     e.preventDefault();
 
     await handleLoginUser();
-    setIsDirty(false);
   };
 
   return (
@@ -77,12 +73,7 @@ function LoginForm() {
         placeholder='Пароль'
       />
 
-      <Button
-        isLoading={loading}
-        text='Войти'
-        disabled={!isDirty}
-        type='submit'
-      />
+      <Button isLoading={loading} text='Войти' type='submit' />
 
       {error.general && <ErrorMessage message={error.general} />}
     </form>

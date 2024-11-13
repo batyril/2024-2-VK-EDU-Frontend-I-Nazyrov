@@ -29,10 +29,6 @@ function validateProfileForm(values) {
     errors.password = 'Пароль должен быть от 8 до 150 символов';
   }
 
-  if (values.bio && (values.bio.length < 5 || values.bio.length > 450)) {
-    errors.bio = 'Биография должна быть от 5 до 450 символов';
-  }
-
   return errors;
 }
 
