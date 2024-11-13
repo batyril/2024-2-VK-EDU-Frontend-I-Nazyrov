@@ -2,7 +2,7 @@ import * as styles from './LoginForm.module.scss';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ErrorMessage from '../../ErrorMessage/ErrorMessage.jsx';
-import loginUser from '../../API/USER/loginUser.js';
+import loginUser from '../../api/user/loginUser.js';
 import PAGES from '../../const/pages.js';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';

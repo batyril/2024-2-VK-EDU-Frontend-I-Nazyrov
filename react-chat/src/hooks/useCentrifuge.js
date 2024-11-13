@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { Centrifuge } from 'centrifuge';
-import getCurrentUser from '../API/USER/getCurrentUser.js';
+import getCurrentUser from '../api/user/getCurrentUser.js';
 import {
   getCentrifugoToken,
   getSubscribeToken,
-} from '../API/CENTRIFUGO/index.js';
+} from '../api/centrifugo/index.js';
 import EVENT_CENTRIFUGO from '../const/events.js';
 
 const useCentrifuge = (chatId, setMessages) => {

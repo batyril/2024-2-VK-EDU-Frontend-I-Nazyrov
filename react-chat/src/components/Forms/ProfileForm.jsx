@@ -2,7 +2,7 @@ import * as styles from './Forms.module.scss';
 import { useEffect, useState } from 'react';
 import useFormValidation from '../../hooks/useFormValidation';
 import validateProfileForm from '../../helpers/validateProfileForm';
-import updateUser from '../../API/USER/updateUser.js';
+import updateUser from '../../api/user/updateUser.js';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
 

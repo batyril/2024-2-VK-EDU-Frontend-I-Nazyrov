@@ -3,7 +3,7 @@ import * as styles from './ChatList.module.scss';
 import Header from '../../components/Header/ChatList.jsx';
 import CreateChat from '../../components/CreateChat/index.js';
 import { useEffect, useState } from 'react';
-import getChats from '../../API/CHAT/getChats.js';
+import getChats from '../../api/chat/getChats.js';
 import Skeleton from '../../components/Skeleton/index.js';
 import usePagination from '../../hooks/usePagination.js';
 import Pagination from '../../components/Pagination/index.js';

@@ -1,7 +1,7 @@
 import * as styles from './Profile.module.scss';
 import Header from '../../components/Header/MessageList.jsx';
 import { useEffect, useState } from 'react';
-import getCurrentUser from '../../API/USER/getCurrentUser.js';
+import getCurrentUser from '../../api/user/getCurrentUser.js';
 import { ProfileForm } from '../../components/Forms';
 import Spinner from '../../components/Spinner/index.js';
 import createAvatar from '../../helpers/createAvatar.js';

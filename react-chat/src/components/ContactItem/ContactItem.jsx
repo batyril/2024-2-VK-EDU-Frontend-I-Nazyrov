@@ -1,6 +1,6 @@
 import * as styles from './ContactItem.module.scss';
 import { useState } from 'react';
-import createChat from '../../API/CHAT/createChat.js';
+import createChat from '../../api/chat/createChat.js';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../Spinner/index.js';
 import createAvatar from '../../helpers/createAvatar.js';

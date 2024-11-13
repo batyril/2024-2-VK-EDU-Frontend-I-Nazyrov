@@ -1,7 +1,7 @@
 import * as styles from './ContactsList.module.scss';
 import Header from '../../components/Header/ContactList.jsx';
 import { useEffect, useState } from 'react';
-import getAllUsers from '../../API/USER/gelAllUsers.js';
+import getAllUsers from '../../api/user/gelAllUsers.js';
 import Pagination from '../../components/Pagination/index.js';
 import usePagination from '../../hooks/usePagination.js';
 import ContactItem from '../../components/ContactItem/index.js';
