@@ -30,6 +30,7 @@ function ContactsList() {
       if (err.message === 'Access token not found') {
         navigate(PAGES.LOGIN);
       }
+
       setError(err.message);
     } finally {
       setLoading(false);
@@ -42,7 +43,7 @@ function ContactsList() {
 
   return (
     <>
-      <Header text={'Список контактов'} />
+      <Header name={'Список контактов'} />
       <main className={styles.chat}>
         {loading && (
           <ul className={styles.chat__list}>
