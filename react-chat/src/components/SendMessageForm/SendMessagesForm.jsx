@@ -1,41 +1,35 @@
 import * as styles from './SendMessagesForm.module.scss';
 import SendIcon from '@mui/icons-material/Send';
-import { useContext, useState } from 'react';
-import { ChatContext } from '../../context/chats.js';
+import { useState, useRef } from 'react';
+import sendMessage from '../../API/MESSAGES/sendMessage.js';
 
-function SendMessagesForm({ userId }) {
-  const { setUserData } = useContext(ChatContext);
+function SendMessagesForm({ chatId }) {
   const [inputText, setInputText] = useState('');
+  const [sending, setSending] = useState(false);
+  const inputRef = useRef(null);
 
-  const handeSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const trimmedInputText = inputText.trim();
-
-    if (!trimmedInputText) {
-      return;
-    }
+    if (!trimmedInputText || sending) return;
 
     const newMessage = {
-      name: 'me',
       text: trimmedInputText,
-      time: Date.now(),
+      chatId,
     };
 
-    setUserData((prevData) => {
-      const updatedChats = prevData.chats.map((chat) => {
-        if (chat.userId === userId) {
-          chat.messages.push(newMessage);
-        }
-        return chat;
-      });
+    setSending(true);
 
-      return {
-        ...prevData,
-        chats: updatedChats,
-      };
-    });
-    setInputText('');
+    try {
+      await sendMessage(newMessage);
+      setInputText('');
+      inputRef.current.focus();
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleChange = (event) => {
@@ -43,13 +37,9 @@ function SendMessagesForm({ userId }) {
   };
 
   return (
-    <form
-      onSubmit={handeSubmit}
-      className={styles.form}
-      action='/simple-chat/public'
-      noValidate
-    >
+    <form onSubmit={handleSubmit} className={styles.form} noValidate>
       <input
+        ref={inputRef}
         autoComplete='off'
         required
         onChange={handleChange}
@@ -59,7 +49,7 @@ function SendMessagesForm({ userId }) {
         placeholder='Введите сообщение'
         type='text'
       />
-      <button type='submit' className={styles.form__send}>
+      <button type='submit' className={styles.form__send} disabled={sending}>
         <SendIcon className={styles.form__sendIcon} />
       </button>
     </form>

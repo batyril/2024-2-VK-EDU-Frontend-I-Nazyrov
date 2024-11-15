@@ -1,0 +1,29 @@
+@use '../../scss/variables' as *;
+
+.chat {
+  flex-direction: column;
+  border-radius: 15px 15px 0 0;
+  background-color: $white;
+  padding: 10px;
+  display: flex;
+  overflow: auto;
+  height: calc(100vh - 60px);
+}
+
+.message__empty {
+  margin: auto;
+}
+
+.message__error {
+  margin: auto;
+}
+
+.message__list {
+  flex-grow: 1;
+  align-items: flex-end;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  padding: 10px 0;
+  overflow-y: auto;
+}

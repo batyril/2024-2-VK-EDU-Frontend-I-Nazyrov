@@ -1,0 +1,15 @@
+@use '../../scss/variables' as *;
+
+.login {
+  flex-direction: column;
+  background-color: $white;
+  padding: 35px;
+  display: flex;
+  overflow: auto;
+  height: 100vh;
+}
+.title {
+  font-size: 24px;
+  margin: 0 auto;
+  margin-bottom: 25px;
+}

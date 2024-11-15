@@ -1,0 +1,42 @@
+@use '../../scss/variables' as *;
+@use '../../scss/animation' as *;
+
+.button {
+  margin-top: 20px;
+  font-size: 15px;
+  padding: 13px;
+  height: 46px;
+  border-radius: 15px 15px;
+  border: 1px solid #00000033;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+  &:focus-visible {
+    outline: 2px solid $green;
+  }
+}
+
+.submitButton {
+  @include effects-button;
+  padding: 10px;
+  color: $white;
+  border-radius: 5px;
+  border: none;
+  background-color: $green;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: $grey;
+    color: $dark;
+    cursor: not-allowed;
+  }
+}
+
+.resetButton {
+  padding: 10px;
+  color: $dark;
+  border-radius: 5px;
+  border: none;
+  background-color: $grey;
+  cursor: pointer;
+}
