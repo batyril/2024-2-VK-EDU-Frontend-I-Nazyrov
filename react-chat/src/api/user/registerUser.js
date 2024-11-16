@@ -9,22 +9,22 @@ const registerUser = async ({
   bio,
   avatar,
 }) => {
-  const response = await axios.post(
-    createUrl(ENDPOINTS.REGISTER),
-    {
-      username,
-      password,
-      first_name,
-      last_name,
-      bio,
-      avatar,
+  console.log(avatar);
+
+  const formData = new FormData();
+  formData.append('username', username);
+  formData.append('password', password);
+  formData.append('first_name', first_name);
+  formData.append('last_name', last_name);
+  formData.append('bio', bio);
+  formData.append('avatar', avatar);
+
+  const response = await axios.post(createUrl(ENDPOINTS.REGISTER), formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
     },
-    {
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    },
-  );
+  });
   return response.data;
 };
+
 export default registerUser;

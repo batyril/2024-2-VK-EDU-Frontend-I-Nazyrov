@@ -44,7 +44,7 @@ function MessageList() {
       setChatInfo(chatData);
     } catch (err) {
       if (err.message === 'Access token not found') {
-        navigate(PAGES.LOGIN);
+        navigate(PAGES.AUTH);
       }
       setError(err.message);
     } finally {

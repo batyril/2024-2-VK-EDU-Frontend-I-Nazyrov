@@ -1,13 +1,13 @@
-import * as styles from './LoginForm.module.scss';
+import * as styles from './AuthForm.module.scss';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ErrorMessage from '../../ErrorMessage/ErrorMessage.jsx';
-import loginUser from '../../api/user/loginUser.js';
+import authUser from '../../api/user/authUser.js';
 import PAGES from '../../const/pages.js';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
 
-function LoginForm() {
+function AuthForm() {
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     username: '',
@@ -29,7 +29,7 @@ function LoginForm() {
     setLoading(true);
     setError({});
     try {
-      const data = await loginUser(formValues);
+      const data = await authUser(formValues);
       localStorage.setItem('accessToken', data.access);
       localStorage.setItem('refreshToken', data.refresh);
       navigate(PAGES.CHAT_LIST);
@@ -80,4 +80,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default AuthForm;

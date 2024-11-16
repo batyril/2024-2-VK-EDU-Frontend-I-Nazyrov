@@ -1,6 +1,6 @@
 import * as styles from './Profile.module.scss';
 import Header from '../../components/Header/MessageList.jsx';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import getCurrentUser from '../../api/user/getCurrentUser.js';
 import { ProfileForm } from '../../components/Forms';
 import Spinner from '../../components/Spinner/index.js';
@@ -14,23 +14,23 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchUserDetail = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await getCurrentUser();
-        setUserDetail(data);
-      } catch (err) {
-        if (err.message === 'Access token not found') {
-          navigate(PAGES.LOGIN);
-        }
-        setError('Не удалось загрузить данные пользователя. Попробуйте позже.');
-      } finally {
-        setLoading(false);
+  const fetchUserDetail = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getCurrentUser();
+      setUserDetail(data);
+    } catch (err) {
+      if (err.message === 'Access token not found') {
+        navigate(PAGES.AUTH);
       }
-    };
+      setError('Не удалось загрузить данные пользователя. Попробуйте позже.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useLayoutEffect(() => {
     fetchUserDetail();
   }, []);
 

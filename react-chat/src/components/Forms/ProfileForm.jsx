@@ -29,11 +29,19 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
     useFormValidation(formValues, validateProfileForm);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: value.trim(),
-    }));
+    const { name, value, type, files } = e.target;
+
+    if (type === 'file') {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: files[0],
+      }));
+    } else {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: value.trim(),
+      }));
+    }
 
     clearFieldError(name);
   };
@@ -100,6 +108,16 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
         value={formValues.bio}
         onChange={handleChange}
         error={errors.bio || error.bio?.[0]}
+      />
+
+      <FormInput
+        as='input'
+        type='file'
+        label='Загрузите аватарку:'
+        name='avatar'
+        onChange={handleChange}
+        error={error.avatar?.[0]}
+        accept='image/*'
       />
       <div className={styles.buttons}>
         <Button text='Очистить' onClick={handleReset} type='reset' />
