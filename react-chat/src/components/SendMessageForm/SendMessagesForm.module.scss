@@ -19,10 +19,54 @@
     border: none;
     background-color: $green;
   }
+  &__label {
+    position: relative;
+    height: 46px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__attachMenu {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  &__attachIcon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  &__dropdown {
+    display: block;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #00000033;
+    border-radius: 5px;
+    padding: 10px 0;
+    min-width: 132px;
+    z-index: 1;
+  }
+  &__dropdownItem {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    &:hover {
+      background-color: $green-hover;
+    }
+  }
   &__input {
     font-size: 15px;
     padding: 13px;
-    height: 46px;
     border-radius: 15px 15px 0 15px;
     border: 1px solid #00000033;
     outline: none;
@@ -32,6 +76,13 @@
     }
   }
   &__sendIcon {
+    color: #ffffff;
+  }
+
+  .form__micro {
+    color: #ffffff;
+  }
+  .form__stopIcon {
     color: #ffffff;
   }
 }
