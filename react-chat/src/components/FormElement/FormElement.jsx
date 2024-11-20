@@ -1,5 +1,5 @@
 import * as styles from './FormElement.module.scss';
-import ErrorMessage from '../../ErrorMessage/ErrorMessage.jsx';
+import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 
 function FormInput({
   label,

@@ -1,12 +1,13 @@
+import { useLayoutEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import * as styles from './Profile.module.scss';
 import Header from '../../components/Header/MessageList.jsx';
-import { useEffect, useLayoutEffect, useState } from 'react';
 import getCurrentUser from '../../api/user/getCurrentUser.js';
 import { ProfileForm } from '../../components/Forms';
 import Spinner from '../../components/Spinner/index.js';
 import createAvatar from '../../helpers/createAvatar.js';
 import PAGES from '../../const/pages.js';
-import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const navigate = useNavigate();
@@ -38,17 +39,27 @@ function Profile() {
 
   return (
     <div>
-      <Header
-        name={'Профиль'}
-        img={
-          userDetail.avatar ? userDetail.avatar : createAvatar(userDetail.name)
-        }
-      />
-      <main className={styles.profile}>
-        {loading && <Spinner />}
-        {error && <p>{error}</p>}
-        {!loading && !error && <ProfileForm {...userDetail} />}
-      </main>
+      {loading && (
+        <div className={styles.loading}>
+          <Spinner />
+        </div>
+      )}
+      {!loading && (
+        <>
+          <Header
+            name={'Профиль'}
+            img={
+              userDetail.avatar && !loading
+                ? userDetail.avatar
+                : createAvatar(userDetail.name)
+            }
+          />
+          <main className={styles.profile}>
+            {error && <p>{error}</p>}
+            {!loading && !error && <ProfileForm {...userDetail} />}
+          </main>
+        </>
+      )}
     </div>
   );
 }

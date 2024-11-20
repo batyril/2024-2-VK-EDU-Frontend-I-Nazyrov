@@ -1,7 +1,7 @@
 import * as styles from './AuthForm.module.scss';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ErrorMessage from '../../ErrorMessage/ErrorMessage.jsx';
+import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import authUser from '../../api/user/authUser.js';
 import PAGES from '../../const/pages.js';
 import FormInput from '../FormElement/index.js';

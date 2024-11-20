@@ -2,7 +2,7 @@ import * as styles from './Forms.module.scss';
 import { useState } from 'react';
 import useFormValidation from '../../hooks/useFormValidation';
 import validateProfileForm from '../../helpers/validateProfileForm';
-import ErrorMessage from '../../ErrorMessage/ErrorMessage.jsx';
+import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import registerUser from '../../api/user/registerUser.js';
 import { useNavigate } from 'react-router-dom';
 import FormInput from '../FormElement/index.js';
