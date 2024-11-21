@@ -85,4 +85,52 @@
   .form__stopIcon {
     color: #ffffff;
   }
+  .form__recordButtons {
+    display: flex;
+    gap: 10px;
+  }
+  .form__delete {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 46px;
+    width: 46px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    color: orangered;
+    &:hover {
+      transition: all 0.3s ease-in-out;
+      background-color: orangered;
+      svg {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.form__recordingIndicator {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: orangered;
+  border-radius: 50%;
+  margin-left: 10px;
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
