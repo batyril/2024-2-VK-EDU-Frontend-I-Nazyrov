@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,44 +12,64 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import SendIcon from '@mui/icons-material/Send';
 import useAudioRecorder from '../../hooks/useAudioRecorder.js';
 import RecordingControls from '../RecordingControls/index.js';
+import ModalFiles from '../ModalFiles/index.js';
 
-function SendMessagesForm({ chatId }) {
+function SendMessagesForm({ chatId, files, setFiles }) {
   const [inputText, setInputText] = useState('');
-  const [sending, setSending] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const inputRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { error, getLocation } = useGeolocation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSubmit = async (e, { voice = null, location = null } = {}) => {
-    console.log(voice, 'voice');
+  useEffect(() => {
+    if (files && files.length > 0) {
+      setIsModalOpen(true);
+    }
+  }, [files]);
+
+  const handleSubmit = async (
+    e,
+    { voice = null, location = null, files = null } = {},
+  ) => {
     if (e) e.preventDefault();
-    if (sending) return;
-    setSending(true);
+    if (isSending) return;
+    setIsSending(true);
 
     let newMessage = null;
+    const trimmedInputText = inputText.trim();
 
-    if (voice) {
-      newMessage = { voice, chatId };
-    } else if (location) {
-      newMessage = { text: location, chatId };
-    } else {
-      const trimmedInputText = inputText.trim();
-      if (!trimmedInputText) {
-        setSending(false);
-        return;
-      }
-      newMessage = { text: trimmedInputText, chatId };
+    switch (true) {
+      case voice !== null:
+        newMessage = { voice, chatId };
+        break;
+      case location !== null:
+        newMessage = { text: location, chatId };
+        break;
+      case files !== null:
+        newMessage = { chatId, files };
+        break;
+      default:
+        if (!trimmedInputText) {
+          setIsSending(false);
+          return;
+        }
+        newMessage = { text: trimmedInputText, chatId };
     }
 
     try {
       await sendMessage(newMessage);
       setInputText('');
+      setFiles([]);
+      fileInputRef.current.value = '';
       inputRef.current?.focus();
+      setIsModalOpen(false);
     } catch (error) {
       console.error('Ошибка отправки сообщения:', error);
       toast.error('Не удалось отправить сообщение');
     } finally {
-      setSending(false);
+      setIsSending(false);
     }
   };
 
@@ -60,6 +80,19 @@ function SendMessagesForm({ chatId }) {
     setInputText(event.target.value);
   };
 
+  const handleFiles = () => {
+    console.log(fileInputRef, 'fileInputRef');
+    fileInputRef.current.click();
+    setIsDropdownOpen(false);
+  };
+
+  const handleFileInputChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+
+    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    setIsModalOpen(true);
+  };
+
   const handleLocation = async () => {
     if (error === 'User denied Geolocation') {
       toast.error('Пользователь запретил доступ к геолокации');
@@ -68,7 +101,7 @@ function SendMessagesForm({ chatId }) {
     }
     try {
       const data = await getLocation();
-      await handleSubmit(null, data);
+      await handleSubmit(null, { location: data });
       setIsDropdownOpen(false);
     } catch (error) {
       toast.error(
@@ -76,10 +109,12 @@ function SendMessagesForm({ chatId }) {
       );
     }
   };
+  //TODO: вынести Dropdown
 
-  const handleFile = () => {
-    // Handle file selection logic
-    setIsDropdownOpen(false);
+  const handleClose = () => {
+    setFiles([]);
+    setIsModalOpen(false);
+    fileInputRef.current.value = '';
   };
 
   return (
@@ -95,6 +130,14 @@ function SendMessagesForm({ chatId }) {
           name='message-text'
           placeholder='Введите сообщение'
           type='text'
+        />
+        <input
+          type='file'
+          multiple
+          accept='image/*'
+          onChange={handleFileInputChange}
+          style={{ display: 'none' }}
+          ref={fileInputRef}
         />
         {isRecording && <div className={styles.form__recordingIndicator} />}
         {!isRecording && (
@@ -112,7 +155,10 @@ function SendMessagesForm({ chatId }) {
                 >
                   <MapIcon /> Location
                 </div>
-                <div className={styles.form__dropdownItem} onClick={handleFile}>
+                <div
+                  onClick={handleFiles}
+                  className={styles.form__dropdownItem}
+                >
                   <FolderIcon />
                   File
                 </div>
@@ -122,7 +168,11 @@ function SendMessagesForm({ chatId }) {
         )}
       </label>
       {inputText ? (
-        <button type='submit' className={styles.form__send} disabled={sending}>
+        <button
+          type='submit'
+          className={styles.form__send}
+          disabled={isSending}
+        >
           <SendIcon className={styles.form__sendIcon} />
         </button>
       ) : (
@@ -133,6 +183,16 @@ function SendMessagesForm({ chatId }) {
           sendAudioMessage={sendAudioMessage}
         />
       )}
+
+      <ModalFiles
+        handleClose={handleClose}
+        isSending={isSending}
+        setIsModalOpen={setIsModalOpen}
+        files={files}
+        setFiles={setFiles}
+        isModalOpen={isModalOpen}
+        handleSubmit={handleSubmit}
+      />
 
       <ToastContainer />
     </form>
