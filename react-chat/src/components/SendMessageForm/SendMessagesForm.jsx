@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 import * as styles from './SendMessagesForm.module.scss';
 import sendMessage from '../../api/messages/sendMessage.js';
@@ -193,8 +192,6 @@ function SendMessagesForm({ chatId, files, setFiles }) {
         isModalOpen={isModalOpen}
         handleSubmit={handleSubmit}
       />
-
-      <ToastContainer />
     </form>
   );
 }
