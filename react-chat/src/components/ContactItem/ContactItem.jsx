@@ -1,33 +1,37 @@
 import * as styles from './ContactItem.module.scss';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import createChat from '../../api/chat/createChat.js';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../Spinner/index.js';
 import createAvatar from '../../helpers/createAvatar.js';
-import * as trace_events from 'node:trace_events';
+import { toast } from 'react-toastify';
 
-function ContactItem({ name, id, img }) {
+const ContactItem = memo(({ name, id, img }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
   const fetchChatInfo = async () => {
     setLoading(true);
     try {
-      const response = await createChat({ members: [id], isPrivate: true });
-      console.log(response);
-      alert('чат создан');
+      const response = await createChat({
+        members: [id],
+        isPrivate: true,
+      });
+
+      toast('чат создан');
       navigate(`/chat/${response.id}`);
     } catch (err) {
       if (
         err.response.data.members[0] ===
         'Private chat with these members already exists'
       ) {
-        alert('чат уже существует');
+        toast('чат уже существует');
         return;
       }
 
       if (err.response.data.members[0] === "Can't append current user") {
-        alert(
+        toast(
           'Невозможно начать чат с самим собой. Попробуйте выбрать другого пользователя',
         );
         return;
@@ -61,6 +65,8 @@ function ContactItem({ name, id, img }) {
       )}
     </div>
   );
-}
+});
+
+ContactItem.displayName = 'ContactItem';
 
 export default ContactItem;
