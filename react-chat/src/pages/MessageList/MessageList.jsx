@@ -16,7 +16,7 @@ import PAGES from '../../const/pages.js';
 import { useInView } from 'react-intersection-observer';
 
 import { useRef } from 'react';
-import useDragAndDrop from '../../hooks/useDragAndDrop.js'; // Добавляем useRef для контроля прокрутки
+import useDragAndDrop from '../../hooks/useDragAndDrop.js';
 
 function MessageList() {
   const navigate = useNavigate();

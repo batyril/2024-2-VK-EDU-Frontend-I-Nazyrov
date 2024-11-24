@@ -35,8 +35,6 @@ function Profile() {
     fetchUserDetail();
   }, []);
 
-  console.log(userDetail);
-
   return (
     <div>
       {loading && (

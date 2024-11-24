@@ -68,7 +68,7 @@ function useAudioRecorder(handleSubmit) {
         });
 
         await handleSubmit(null, { voice: audioFile });
-        setMediaRecorder();
+        setMediaRecorder(null);
       };
     };
 

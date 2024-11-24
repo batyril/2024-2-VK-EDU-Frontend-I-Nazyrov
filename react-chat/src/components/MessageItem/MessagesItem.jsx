@@ -7,7 +7,6 @@ const MessagesItem = forwardRef(function MessagesItem(
   { name, text, time, isSender, voice, files },
   ref,
 ) {
-  console.log(files);
   return (
     <div
       ref={ref}

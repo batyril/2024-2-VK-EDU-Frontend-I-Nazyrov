@@ -4,14 +4,12 @@ import { toast } from 'react-toastify';
 import * as styles from './SendMessagesForm.module.scss';
 import sendMessage from '../../api/messages/sendMessage.js';
 import useGeolocation from '../../hooks/useGeolocation.js';
-//icons
-import MapIcon from '@mui/icons-material/Map';
-import FolderIcon from '@mui/icons-material/Folder';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+
 import SendIcon from '@mui/icons-material/Send';
 import useAudioRecorder from '../../hooks/useAudioRecorder.js';
 import RecordingControls from '../RecordingControls/index.js';
 import ModalFiles from '../ModalFiles/index.js';
+import AttachDropdown from '../AttachDropdown/index.js';
 
 function SendMessagesForm({ chatId, files, setFiles }) {
   const [inputText, setInputText] = useState('');
@@ -80,7 +78,6 @@ function SendMessagesForm({ chatId, files, setFiles }) {
   };
 
   const handleFiles = () => {
-    console.log(fileInputRef, 'fileInputRef');
     fileInputRef.current.click();
     setIsDropdownOpen(false);
   };
@@ -108,7 +105,6 @@ function SendMessagesForm({ chatId, files, setFiles }) {
       );
     }
   };
-  //TODO: вынести Dropdown
 
   const handleClose = () => {
     setFiles([]);
@@ -120,6 +116,7 @@ function SendMessagesForm({ chatId, files, setFiles }) {
     <form onSubmit={handleSubmit} className={styles.form} noValidate>
       <label className={styles.form__label}>
         <input
+          disabled={isRecording}
           ref={inputRef}
           autoComplete='off'
           required
@@ -140,30 +137,12 @@ function SendMessagesForm({ chatId, files, setFiles }) {
         />
         {isRecording && <div className={styles.form__recordingIndicator} />}
         {!isRecording && (
-          <div
-            onMouseEnter={() => setIsDropdownOpen(true)}
-            onMouseLeave={() => setIsDropdownOpen(false)}
-            className={styles.form__attachMenu}
-          >
-            <AttachFileIcon className={styles.form__attachIcon} />
-            {isDropdownOpen && (
-              <div className={styles.form__dropdown}>
-                <div
-                  className={styles.form__dropdownItem}
-                  onClick={handleLocation}
-                >
-                  <MapIcon /> Location
-                </div>
-                <div
-                  onClick={handleFiles}
-                  className={styles.form__dropdownItem}
-                >
-                  <FolderIcon />
-                  File
-                </div>
-              </div>
-            )}
-          </div>
+          <AttachDropdown
+            isDropdownOpen={isDropdownOpen}
+            setIsDropdownOpen={setIsDropdownOpen}
+            handleLocation={handleLocation}
+            handleFiles={handleFiles}
+          />
         )}
       </label>
       {inputText ? (

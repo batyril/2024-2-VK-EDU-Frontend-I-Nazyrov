@@ -7,6 +7,27 @@ import {
 } from '../api/centrifugo/index.js';
 import EVENT_CENTRIFUGO from '../const/events.js';
 
+const sendNotification = (message) => {
+  if (!('Notification' in window)) {
+    console.warn('Этот браузер не поддерживает уведомления на рабочем столе');
+    return;
+  }
+
+  if (Notification.permission === 'granted') {
+    new Notification('Новое сообщение', {
+      body: message.text,
+    });
+  } else if (Notification.permission !== 'denied') {
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        new Notification('Новое сообщение', {
+          body: message.text,
+        });
+      }
+    });
+  }
+};
+
 const useCentrifuge = (chatId, setMessages) => {
   useEffect(() => {
     let centrifuge;
@@ -33,8 +54,11 @@ const useCentrifuge = (chatId, setMessages) => {
           const { event, message } = ctx.data;
 
           const isCurrentChat = message.chat === chatId;
-          if (!isCurrentChat) return;
 
+          if (!isCurrentChat) {
+            sendNotification(message);
+            return;
+          }
           setMessages((prevMessages) => {
             switch (event) {
               case EVENT_CENTRIFUGO.CREATE: {

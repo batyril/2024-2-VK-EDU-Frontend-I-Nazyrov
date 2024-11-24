@@ -9,8 +9,6 @@ const registerUser = async ({
   bio,
   avatar,
 }) => {
-  console.log(avatar);
-
   const formData = new FormData();
   formData.append('username', username);
   formData.append('password', password);

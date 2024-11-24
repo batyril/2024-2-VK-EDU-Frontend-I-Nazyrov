@@ -7,11 +7,11 @@ import Search from '@mui/icons-material/Search';
 function Header({ name }) {
   return (
     <header className={styles.header}>
-      <div className={styles.header__icon}>
-        <Link to={PAGES.CHAT_LIST}>
+      <Link to={PAGES.CHAT_LIST}>
+        <div className={styles.header__icon}>
           <ArrowBackIos className={styles.header__back} />
-        </Link>
-      </div>
+        </div>
+      </Link>
       <div className={styles.header__text}>
         <p className={styles.header__username}>{name}</p>
       </div>

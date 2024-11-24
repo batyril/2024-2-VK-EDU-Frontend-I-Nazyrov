@@ -7,11 +7,12 @@ import PAGES from '../../const/pages.js';
 function Header({ text }) {
   return (
     <header className={styles.header}>
-      <div className={styles.header__icon}>
-        <Link to={PAGES.PROFILE}>
-          <Menu className={styles.header__menu} />
-        </Link>
-      </div>
+      <Link to={PAGES.PROFILE}>
+        <div className={styles.header__icon}>
+          <Menu className={styles.header__menu} />{' '}
+        </div>
+      </Link>
+
       <div className={styles.header__text}>
         <p className={styles.header__username}>{text}</p>
       </div>

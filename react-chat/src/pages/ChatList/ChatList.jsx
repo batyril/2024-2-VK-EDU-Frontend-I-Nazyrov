@@ -45,12 +45,6 @@ function ChatList() {
     fetchChats(page);
   }, [page]);
 
-  useEffect(() => {
-    if (page > 1) {
-      containerRef.current.scrollTop = scrollPositionRef.current;
-    }
-  }, [chats]);
-
   const { ref, inView } = useInView({
     threshold: 1.0,
   });
@@ -60,8 +54,7 @@ function ChatList() {
       setPage((prevPage) => prevPage + 1);
     }
   }, [inView, hasMore, loading]);
-  //TODO:показывать что голосовое  сообщение
-  //TODO:показывать что картинки
+
   return (
     <>
       <Header text={'Список чатов'} />
@@ -86,8 +79,7 @@ function ChatList() {
                   userId={id}
                   key={id}
                   name={title}
-                  time={last_message.created_at}
-                  text={last_message.text}
+                  last_message={last_message}
                 />
               ))}
               <div ref={ref}></div>
