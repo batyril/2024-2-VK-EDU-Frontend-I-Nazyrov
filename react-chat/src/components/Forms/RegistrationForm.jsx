@@ -7,6 +7,7 @@ import registerUser from '../../api/user/registerUser.js';
 import { useNavigate } from 'react-router-dom';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
+import PAGES from '../../const/pages.js';
 
 function RegistrationForm() {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ function RegistrationForm() {
     setLoading(true);
     try {
       await registerUser(formValues);
-      navigate('/login');
+      navigate(PAGES.AUTH);
       setError({});
     } catch (error) {
       if (error.response && error.response.data) {
