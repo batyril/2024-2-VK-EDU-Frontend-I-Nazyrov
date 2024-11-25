@@ -30,6 +30,7 @@ function MessageList() {
   const [hasMore, setHasMore] = useState(true);
 
   const messageListRef = useRef(null); // Реф для контейнера с сообщениями
+  const scrollPosition = useRef(0); // Реф для хранения позиции в процентах
   const { ref, inView } = useInView({
     threshold: 0.5,
   });
@@ -69,7 +70,7 @@ function MessageList() {
 
   useLayoutEffect(() => {
     fetchAllData(page);
-  }, [chatId, page]);
+  }, [page]);
 
   useEffect(() => {
     if (inView && hasMore) {
@@ -78,10 +79,37 @@ function MessageList() {
   }, [inView, hasMore]);
 
   useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (messageListRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } =
+          messageListRef.current;
+        scrollPosition.current =
+          (scrollTop / (scrollHeight - clientHeight)) * 100;
+      }
+    };
+
+    handleBeforeUnload();
+    return () => handleBeforeUnload();
+  }, [page]);
+
+  useEffect(() => {
     if (!loading && messages.length > 0) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+      const { scrollHeight, clientHeight } = messageListRef.current;
+
+      if (scrollPosition.current === 0) {
+        messageListRef.current.scrollTop = scrollHeight - clientHeight;
+      } else {
+        const savedScrollPosition = scrollPosition.current / 100;
+        const targetScroll =
+          (scrollHeight - clientHeight) * (savedScrollPosition + 0.2);
+
+        messageListRef.current.scrollTop = Math.min(
+          targetScroll,
+          scrollHeight - clientHeight,
+        );
+      }
     }
-  }, [messages]);
+  }, [messages, loading]);
 
   const {
     isDragging,

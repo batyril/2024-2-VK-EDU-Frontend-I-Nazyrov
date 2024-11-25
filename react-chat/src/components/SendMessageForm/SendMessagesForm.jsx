@@ -85,6 +85,11 @@ function SendMessagesForm({ chatId, files, setFiles }) {
   const handleFileInputChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
 
+    if (files.length + selectedFiles.length > 5) {
+      toast.error('Нельзя загружать больше 5 файлов');
+      return;
+    }
+
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
     setIsModalOpen(true);
   };

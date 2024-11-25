@@ -2,6 +2,7 @@ import * as styles from './MessagesItem.module.scss';
 import formatTime from '../../helpers/FormatTime.js';
 import clsx from 'clsx';
 import { forwardRef } from 'react';
+import DoneAll from '@mui/icons-material/DoneAll';
 
 const MessagesItem = forwardRef(function MessagesItem(
   { name, text, time, isSender, voice, files },
@@ -45,8 +46,9 @@ const MessagesItem = forwardRef(function MessagesItem(
       <div className={styles.message__wrapper}>
         {/*<p className={styles.message__name}>{name}</p>*/}
         <p className={styles.message__text}>{text}</p>
-
-        <p className={styles.message__time}>{formatTime(time)}</p>
+        <div className={styles.message__status}>
+          <p className={styles.message__time}>{formatTime(time)}</p> <DoneAll />
+        </div>
       </div>
     </div>
   );

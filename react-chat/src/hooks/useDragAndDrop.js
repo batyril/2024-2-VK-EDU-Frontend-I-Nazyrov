@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-function useDragAndDrop() {
+function useDragAndDrop(maxFiles = 5) {
   const [isDragging, setIsDragging] = useState(false);
   const [files, setFiles] = useState([]);
   const handleDragOver = (e) => {
@@ -25,6 +25,11 @@ function useDragAndDrop() {
 
     if (imageFiles.length < droppedFiles.length) {
       toast.error('Можно загружать только изображения!');
+    }
+
+    if (files.length + imageFiles.length > maxFiles) {
+      toast.error(`Нельзя загружать больше ${maxFiles} файлов!`);
+      return;
     }
 
     setFiles((prevFiles) => [...prevFiles, ...imageFiles]);
