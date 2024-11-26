@@ -11,7 +11,7 @@ import RecordingControls from '../RecordingControls/index.js';
 import ModalFiles from '../ModalFiles/index.js';
 import AttachDropdown from '../AttachDropdown/index.js';
 
-function SendMessagesForm({ chatId, files, setFiles }) {
+function SendMessagesForm({ chatId, files, setFiles, deleteFile }) {
   const [inputText, setInputText] = useState('');
   const [isSending, setIsSending] = useState(false);
   const inputRef = useRef(null);
@@ -168,6 +168,7 @@ function SendMessagesForm({ chatId, files, setFiles }) {
       )}
 
       <ModalFiles
+        deleteFile={deleteFile}
         handleClose={handleClose}
         isSending={isSending}
         setIsModalOpen={setIsModalOpen}

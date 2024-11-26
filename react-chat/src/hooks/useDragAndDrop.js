@@ -4,6 +4,20 @@ import { toast } from 'react-toastify';
 function useDragAndDrop(maxFiles = 5) {
   const [isDragging, setIsDragging] = useState(false);
   const [files, setFiles] = useState([]);
+
+  const deleteFile = (name) => {
+    setFiles((prevFiles) => {
+      const indexToDelete = prevFiles.findIndex((file) => file.name === name);
+      if (indexToDelete !== -1) {
+        return [
+          ...prevFiles.slice(0, indexToDelete),
+          ...prevFiles.slice(indexToDelete + 1),
+        ];
+      }
+      return prevFiles;
+    });
+  };
+
   const handleDragOver = (e) => {
     e.preventDefault();
     setIsDragging(true);
@@ -37,6 +51,7 @@ function useDragAndDrop(maxFiles = 5) {
   return {
     isDragging,
     files,
+    deleteFile,
     handleDragOver,
     handleDragLeave,
     handleDrop,

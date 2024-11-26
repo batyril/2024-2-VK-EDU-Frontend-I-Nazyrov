@@ -118,6 +118,7 @@ function MessageList() {
     handleDrop,
     files,
     setFiles,
+    deleteFile,
   } = useDragAndDrop();
 
   return (
@@ -165,7 +166,12 @@ function MessageList() {
               </div>
             ))}
         </div>
-        <SendMessagesForm setFiles={setFiles} files={files} chatId={chatId} />
+        <SendMessagesForm
+          deleteFile={deleteFile}
+          setFiles={setFiles}
+          files={files}
+          chatId={chatId}
+        />
         {isDragging && (
           <div className={styles.dropArea}>
             <p>Перетащите файлы сюда</p>
