@@ -35,8 +35,6 @@ const useCentrifuge = (chatId, setMessages) => {
 
           const isCurrentChat = message.chat === chatId;
 
-          console.log(message);
-
           if (!isCurrentChat) {
             sendNotification(message);
             return;

@@ -33,9 +33,11 @@ function ChatItem({ name, userId, img, last_message }) {
             <p className='chat-item__status'>
               <DoneAll />
             </p>
-            <p className='chat-item__time'>
-              {last_message.time && formatTime(last_message.time)}
-            </p>
+            {last_message.created_at && (
+              <p className='chat-item__time'>
+                {formatTime(last_message.created_at)}
+              </p>
+            )}
           </div>
         )}
       </div>
