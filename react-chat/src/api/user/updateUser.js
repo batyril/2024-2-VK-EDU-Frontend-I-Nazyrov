@@ -17,7 +17,10 @@ const updateUser = async ({
   formData.append('first_name', first_name);
   formData.append('last_name', last_name);
   formData.append('bio', bio);
-  formData.append('avatar', avatar);
+
+  if (avatar && typeof avatar !== 'string') {
+    formData.append('avatar', avatar);
+  }
 
   const response = await axios.patch(createUrl(ENDPOINTS.USER(id)), formData, {
     headers: {

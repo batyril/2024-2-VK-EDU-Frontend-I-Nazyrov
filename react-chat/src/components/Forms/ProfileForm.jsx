@@ -37,7 +37,6 @@ function ProfileForm({ first_name, last_name, username, bio, id, avatar }) {
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-
     if (type === 'file') {
       const file = files[0];
       if (file) {
@@ -55,6 +54,7 @@ function ProfileForm({ first_name, last_name, username, bio, id, avatar }) {
       }));
     }
 
+    setError((prevErrors) => ({ ...prevErrors, [name]: '' }));
     clearFieldError(name);
   };
 
@@ -62,13 +62,15 @@ function ProfileForm({ first_name, last_name, username, bio, id, avatar }) {
     setFormValues({ first_name: '', last_name: '', username: '', bio: '' });
     setPreviewAvatar(avatar || '');
     clearErrors();
+    setError({});
     setIsSaved(false);
   };
 
-  const handleChangeUserDetails = async () => {
+  const handleChangeUserDetails = async (data) => {
     setLoading(true);
+
     try {
-      await updateUser({ id, ...formValues });
+      await updateUser({ id, ...data });
       setError({});
     } catch (error) {
       if (error.response && error.response.data) {
@@ -86,7 +88,7 @@ function ProfileForm({ first_name, last_name, username, bio, id, avatar }) {
 
     if (!validateValues(formValues)) return;
 
-    await handleChangeUserDetails();
+    await handleChangeUserDetails(formValues);
 
     setIsSaved(true);
   };

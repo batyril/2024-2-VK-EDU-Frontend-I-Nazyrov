@@ -37,7 +37,6 @@ function RegistrationForm() {
         [name]: value,
       }));
     }
-
     clearFieldError(name);
     setError((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
