@@ -1,29 +1,36 @@
-import * as styles from './Forms.module.scss';
 import { useEffect, useState } from 'react';
-import useFormValidation from '../../hooks/useFormValidation';
-import validateProfileForm from '../../helpers/validateProfileForm';
-import updateUser from '../../api/user/updateUser.js';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
 
-function ProfileForm({ first_name, last_name, username, bio, id }) {
+import useFormValidation from '../../hooks/useFormValidation';
+import validateProfileForm from '../../helpers/validateProfileForm';
+import updateUser from '../../api/user/updateUser.js';
+import * as styles from './Forms.module.scss';
+
+function ProfileForm({ first_name, last_name, username, bio, id, avatar }) {
   const [error, setError] = useState({});
   const [formValues, setFormValues] = useState({
     first_name: '',
     last_name: '',
     username: '',
     bio: '',
+    avatar: '',
   });
+
   const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [previewAvatar, setPreviewAvatar] = useState(avatar || '');
+
   useEffect(() => {
     setFormValues({
       first_name: first_name || '',
       last_name: last_name || '',
       username: username || '',
       bio: bio || '',
+      avatar: avatar || '',
     });
-  }, [first_name, last_name, username, bio]);
+    setPreviewAvatar(avatar || '');
+  }, [first_name, last_name, username, bio, avatar]);
 
   const { errors, validateValues, clearFieldError, clearErrors } =
     useFormValidation(formValues, validateProfileForm);
@@ -32,10 +39,15 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
     const { name, value, type, files } = e.target;
 
     if (type === 'file') {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [name]: files[0],
-      }));
+      const file = files[0];
+      if (file) {
+        const fileURL = URL.createObjectURL(file);
+        setPreviewAvatar(fileURL);
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          [name]: file,
+        }));
+      }
     } else {
       setFormValues((prevValues) => ({
         ...prevValues,
@@ -48,6 +60,7 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
 
   const handleReset = () => {
     setFormValues({ first_name: '', last_name: '', username: '', bio: '' });
+    setPreviewAvatar(avatar || '');
     clearErrors();
     setIsSaved(false);
   };
@@ -61,7 +74,7 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
       if (error.response && error.response.data) {
         setError(error.response.data);
       } else {
-        setError({ general: 'Ошибка регистрации. Попробуйте снова.' });
+        setError({ general: 'Ошибка. Попробуйте снова.' });
       }
     } finally {
       setLoading(false);
@@ -109,7 +122,7 @@ function ProfileForm({ first_name, last_name, username, bio, id }) {
         onChange={handleChange}
         error={errors.bio || error.bio?.[0]}
       />
-
+      <img className={styles.avatar} src={previewAvatar} alt='avatar' />
       <FormInput
         as='input'
         type='file'

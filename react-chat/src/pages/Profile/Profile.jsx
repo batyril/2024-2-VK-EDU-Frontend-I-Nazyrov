@@ -2,11 +2,10 @@ import { useLayoutEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as styles from './Profile.module.scss';
-import Header from '../../components/Header/MessageList.jsx';
+import Header from '../../components/Header/Registr.jsx';
 import getCurrentUser from '../../api/user/getCurrentUser.js';
 import { ProfileForm } from '../../components/Forms';
 import Spinner from '../../components/Spinner/index.js';
-import createAvatar from '../../helpers/createAvatar.js';
 import PAGES from '../../const/pages.js';
 
 function Profile() {
@@ -44,14 +43,7 @@ function Profile() {
       )}
       {!loading && (
         <>
-          <Header
-            name={'Профиль'}
-            img={
-              userDetail.avatar && !loading
-                ? userDetail.avatar
-                : createAvatar(userDetail.name)
-            }
-          />
+          <Header name={'Профиль'} />
           <main className={styles.profile}>
             {error && <p>{error}</p>}
             {!loading && !error && <ProfileForm {...userDetail} />}
