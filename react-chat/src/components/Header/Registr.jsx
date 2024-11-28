@@ -2,26 +2,20 @@ import * as styles from './Header.module.scss';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import PAGES from '../../const/pages.js';
 import { Link } from 'react-router-dom';
+import clsx from 'clsx';
 
-function Header({ name, img }) {
+function Header({ name }) {
   return (
-    <header className={styles.header}>
-      <Link to={PAGES.CHAT_LIST}>
+    <header className={clsx(styles.header, styles.header__registr)}>
+      <Link to={PAGES.AUTH}>
         <div className={styles.header__icon}>
-          <ArrowBackIos className={styles.header__back} />
+          <ArrowBackIos className={styles.header__back} />{' '}
         </div>
       </Link>
 
       <div className={styles.header__text}>
         <p className={styles.header__username}>{name}</p>
       </div>
-      <img
-        width='40'
-        height='40'
-        src={img}
-        alt='avatar'
-        className={styles.chat__img}
-      />
     </header>
   );
 }

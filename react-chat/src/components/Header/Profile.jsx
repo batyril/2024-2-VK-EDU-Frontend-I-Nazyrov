@@ -6,11 +6,12 @@ import { Link } from 'react-router-dom';
 function Header({ img }) {
   return (
     <header className={styles.header}>
-      <div className={styles.header__icon}>
-        <Link to={PAGES.CHAT_LIST}>
+      <Link to={PAGES.CHAT_LIST}>
+        <div className={styles.header__icon}>
           <ArrowBackIos className={styles.header__back} />
-        </Link>
-      </div>
+        </div>
+      </Link>
+
       <img
         width='40'
         height='40'

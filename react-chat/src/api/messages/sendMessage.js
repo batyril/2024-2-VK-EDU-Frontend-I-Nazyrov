@@ -12,7 +12,7 @@ const sendMessage = async ({ chatId, text = '', voice = null, files = [] }) => {
     formData.append('voice', voice);
   } else {
     if (text) formData.append('text', text);
-    files.forEach((file, index) => formData.append(`files[${index}]`, file));
+    files.forEach((file) => formData.append(`files`, file));
   }
 
   try {

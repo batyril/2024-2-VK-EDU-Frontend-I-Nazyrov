@@ -21,3 +21,10 @@
   margin-top: 8px;
   text-align: center;
 }
+
+.avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}

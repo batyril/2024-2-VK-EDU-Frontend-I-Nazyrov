@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { Centrifuge } from 'centrifuge';
-import getCurrentUser from '../API/USER/getCurrentUser.js';
+import getCurrentUser from '../api/user/getCurrentUser.js';
 import {
   getCentrifugoToken,
   getSubscribeToken,
-} from '../API/CENTRIFUGO/index.js';
+} from '../api/centrifugo/index.js';
 import EVENT_CENTRIFUGO from '../const/events.js';
+import sendNotification from '../helpers/sendNotification.js';
 
 const useCentrifuge = (chatId, setMessages) => {
   useEffect(() => {
@@ -33,8 +34,11 @@ const useCentrifuge = (chatId, setMessages) => {
           const { event, message } = ctx.data;
 
           const isCurrentChat = message.chat === chatId;
-          if (!isCurrentChat) return;
 
+          if (!isCurrentChat) {
+            sendNotification(message);
+            return;
+          }
           setMessages((prevMessages) => {
             switch (event) {
               case EVENT_CENTRIFUGO.CREATE: {

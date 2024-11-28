@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { createUrl, ENDPOINTS } from '../../const/apiUrls.js';
 
-const loginUser = async ({ username, password }) => {
+const authUser = async ({ username, password }) => {
   const response = await axios.post(
     createUrl(ENDPOINTS.AUTH),
     {
@@ -17,4 +17,4 @@ const loginUser = async ({ username, password }) => {
   return response.data;
 };
 
-export default loginUser;
+export default authUser;

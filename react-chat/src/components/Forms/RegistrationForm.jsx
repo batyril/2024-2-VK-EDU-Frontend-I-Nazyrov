@@ -2,11 +2,12 @@ import * as styles from './Forms.module.scss';
 import { useState } from 'react';
 import useFormValidation from '../../hooks/useFormValidation';
 import validateProfileForm from '../../helpers/validateProfileForm';
-import ErrorMessage from '../../ErrorMessage/ErrorMessage.jsx';
-import registerUser from '../../API/USER/registerUser.js';
+import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
+import registerUser from '../../api/user/registerUser.js';
 import { useNavigate } from 'react-router-dom';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
+import PAGES from '../../const/pages.js';
 
 function RegistrationForm() {
   const navigate = useNavigate();
@@ -17,18 +18,25 @@ function RegistrationForm() {
     username: '',
     password: '',
     bio: '',
+    avatar: '',
   });
   const [error, setError] = useState({});
   const { errors, validateValues, clearFieldError, clearErrors } =
     useFormValidation(formValues, validateProfileForm);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
-
+    const { name, value, type, files } = e.target;
+    if (type === 'file') {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: files[0],
+      }));
+    } else {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
+    }
     clearFieldError(name);
     setError((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
@@ -40,6 +48,7 @@ function RegistrationForm() {
       username: '',
       password: '',
       bio: '',
+      avatar: '',
     });
     clearErrors();
     setError({});
@@ -49,7 +58,7 @@ function RegistrationForm() {
     setLoading(true);
     try {
       await registerUser(formValues);
-      navigate('/login');
+      navigate(PAGES.AUTH);
       setError({});
     } catch (error) {
       if (error.response && error.response.data) {
@@ -108,6 +117,16 @@ function RegistrationForm() {
         value={formValues.bio}
         onChange={handleChange}
         error={errors.bio || error.bio?.[0]}
+      />
+
+      <FormInput
+        as='input'
+        type='file'
+        label='Загрузите аватарку:'
+        name='avatar'
+        onChange={handleChange}
+        error={error.avatar?.[0]}
+        accept='image/*'
       />
 
       <div className={styles.buttons}>

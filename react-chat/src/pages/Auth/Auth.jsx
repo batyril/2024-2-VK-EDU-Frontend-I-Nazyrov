@@ -1,15 +1,15 @@
-import * as styles from './Login.module.scss';
+import * as styles from './Auth.module.scss';
 import { Link } from 'react-router-dom';
 import PAGES from '../../const/pages.js';
-import LoginForm from '../../components/LoginForm/LoginForm.jsx';
+import AuthForm from '../../components/AuthForm/AuthForm.jsx';
 
-function Login() {
+function Auth() {
   return (
     <div>
       <main className={styles.container}>
         <div className={styles.login}>
           <h1 className={styles.title}>Вход</h1>
-          <LoginForm />
+          <AuthForm />
           <p className={styles.registration}>
             У вас еще нет аккаунта?
             <Link to={PAGES.REGISTRATION}> Создайте новый</Link>
@@ -20,4 +20,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Auth;

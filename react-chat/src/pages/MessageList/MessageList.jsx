@@ -3,48 +3,64 @@ import * as styles from './MessageList.module.scss';
 import Header from '../../components/Header/MessageList.jsx';
 import MessagesItem from '../../components/MessageItem/index.js';
 import { useNavigate, useParams } from 'react-router-dom';
-import useAutoScrollToBottom from '../../hooks/useAutoScrollToBottom.js';
-import { useLayoutEffect, useState } from 'react';
-import getMessages from '../../API/MESSAGES/getMessages.js';
-import getChatById from '../../API/CHAT/getChatById.js';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import getMessages from '../../api/messages/getMessages.js';
+import getChatById from '../../api/chat/getChatById.js';
 import useCentrifuge from '../../hooks/useCentrifuge.js';
-import getCurrentUser from '../../API/USER/getCurrentUser.js';
+import getCurrentUser from '../../api/user/getCurrentUser.js';
 import createAvatar from '../../helpers/createAvatar.js';
 import Spinner from '../../components/Spinner/index.js';
 import { Player } from '@lottiefiles/react-lottie-player';
 import animate from '../../animation/message.json';
 import PAGES from '../../const/pages.js';
+import { useInView } from 'react-intersection-observer';
+
+import { useRef } from 'react';
+import useDragAndDrop from '../../hooks/useDragAndDrop.js';
 
 function MessageList() {
   const navigate = useNavigate();
-
   const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [chatInfo, setChatInfo] = useState(null);
   const [userDetail, setUserDetail] = useState(null);
-  // const messagesEndRef = useAutoScrollToBottom([messages]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const messageListRef = useRef(null); // Реф для контейнера с сообщениями
+  const scrollPosition = useRef(0); // Реф для хранения позиции в процентах
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+  });
 
   useCentrifuge(chatId, setMessages);
 
-  const fetchAllData = async () => {
+  const fetchAllData = async (currentPage) => {
     setLoading(true);
     setError(null);
 
     try {
       const [messagesData, userData, chatData] = await Promise.all([
-        getMessages({ chatId }),
+        getMessages({ chatId, pageSize: 10, page: currentPage }),
         getCurrentUser(),
         getChatById(chatId),
       ]);
 
-      setMessages(messagesData.results.reverse());
+      setMessages((prevMessages) => [
+        ...messagesData.results.reverse(),
+        ...prevMessages,
+      ]);
       setUserDetail(userData);
       setChatInfo(chatData);
+
+      if (!messagesData.next) {
+        setHasMore(false);
+      }
     } catch (err) {
       if (err.message === 'Access token not found') {
-        navigate(PAGES.LOGIN);
+        navigate(PAGES.AUTH);
       }
       setError(err.message);
     } finally {
@@ -53,8 +69,57 @@ function MessageList() {
   };
 
   useLayoutEffect(() => {
-    fetchAllData();
-  }, [chatId]);
+    fetchAllData(page);
+  }, [page]);
+
+  useEffect(() => {
+    if (inView && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [inView, hasMore]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (messageListRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } =
+          messageListRef.current;
+        scrollPosition.current =
+          (scrollTop / (scrollHeight - clientHeight)) * 100;
+      }
+    };
+
+    handleBeforeUnload();
+    return () => handleBeforeUnload();
+  }, [page]);
+
+  useEffect(() => {
+    if (!loading && messages.length > 0) {
+      const { scrollHeight, clientHeight } = messageListRef.current;
+
+      if (scrollPosition.current === 0) {
+        messageListRef.current.scrollTop = scrollHeight - clientHeight;
+      } else {
+        const savedScrollPosition = scrollPosition.current / 100;
+        const targetScroll =
+          (scrollHeight - clientHeight) * (savedScrollPosition + 0.2);
+
+        messageListRef.current.scrollTop = Math.min(
+          targetScroll,
+          scrollHeight - clientHeight,
+        );
+      }
+    }
+  }, [messages, loading]);
+
+  const {
+    isDragging,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    files,
+    setFiles,
+    deleteFile,
+  } = useDragAndDrop();
 
   return (
     <>
@@ -62,23 +127,33 @@ function MessageList() {
         name={chatInfo?.title}
         img={chatInfo?.avatar ? chatInfo?.avatar : createAvatar(name)}
       />
-      <main className={styles.chat}>
-        <div className={styles.message__list}>
+      <main
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={styles.chat}
+      >
+        <div ref={messageListRef} className={styles.message__list}>
           {loading && <Spinner />}
           {error && <p className={styles.message__error}>Ошибка: {error}</p>}
 
           {!loading &&
             !error &&
             (messages.length > 0 ? (
-              messages.map(({ sender, text, created_at, id }) => (
-                <MessagesItem
-                  isSender={sender?.id === userDetail?.id}
-                  name={sender.username}
-                  key={id}
-                  text={text}
-                  time={created_at}
-                />
-              ))
+              messages.map(
+                ({ sender, text, created_at, id, voice, files }, index) => (
+                  <MessagesItem
+                    voice={voice}
+                    ref={index === 0 ? ref : null}
+                    isSender={sender?.id === userDetail?.id}
+                    name={sender.username}
+                    key={id}
+                    text={text}
+                    time={created_at}
+                    files={files}
+                  />
+                ),
+              )
             ) : (
               <div className={styles.message__empty}>
                 <Player
@@ -90,9 +165,18 @@ function MessageList() {
                 Здесь пока нет сообщений. Начните общение!
               </div>
             ))}
-          {/*<div ref={messagesEndRef} />*/}
         </div>
-        <SendMessagesForm chatId={chatId} />
+        <SendMessagesForm
+          deleteFile={deleteFile}
+          setFiles={setFiles}
+          files={files}
+          chatId={chatId}
+        />
+        {isDragging && (
+          <div className={styles.dropArea}>
+            <p>Перетащите файлы сюда</p>
+          </div>
+        )}
       </main>
     </>
   );

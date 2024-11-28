@@ -1,0 +1,50 @@
+@use '../../scss/variables' as *;
+@use '../../scss/animation' as *;
+
+.recordingControls {
+  &__buttons {
+    display: flex;
+    gap: 10px;
+  }
+  &__send {
+    @include effects-button;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 46px;
+    width: 46px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    background-color: $green;
+  }
+
+  &__sendIcon {
+    color: #ffffff;
+  }
+
+  &__micro {
+    color: #ffffff;
+  }
+
+  &__delete {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 46px;
+    width: 46px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    color: orangered;
+    &:hover {
+      transition: all 0.3s ease-in-out;
+      background-color: orangered;
+      svg {
+        color: #ffffff;
+      }
+    }
+  }
+}

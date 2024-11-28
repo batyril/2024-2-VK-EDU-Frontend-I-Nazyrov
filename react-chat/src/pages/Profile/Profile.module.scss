@@ -9,3 +9,10 @@
   overflow: auto;
   height: calc(100vh - 60px);
 }
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
