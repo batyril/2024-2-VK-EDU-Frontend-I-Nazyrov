@@ -3,13 +3,14 @@ import { useState } from 'react';
 import useFormValidation from '../../hooks/useFormValidation';
 import validateProfileForm from '../../helpers/validateProfileForm';
 import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
-import registerUser from '../../api/user/registerUser.js';
 import { useNavigate } from 'react-router-dom';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
 import PAGES from '../../const/pages.js';
+import { userService } from '../../api/userService/index.js';
 
 function RegistrationForm() {
+  const { registerUser } = userService();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({

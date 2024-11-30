@@ -1,33 +1,56 @@
-import SendMessagesForm from '../../components/SendMessageForm';
 import * as styles from './MessageList.module.scss';
 import Header from '../../components/Header/MessageList.jsx';
 import MessagesItem from '../../components/MessageItem/index.js';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import getMessages from '../../api/messages/getMessages.js';
-import getChatById from '../../api/chat/getChatById.js';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import useCentrifuge from '../../hooks/useCentrifuge.js';
-import getCurrentUser from '../../api/user/getCurrentUser.js';
 import createAvatar from '../../helpers/createAvatar.js';
 import Spinner from '../../components/Spinner/index.js';
 import { Player } from '@lottiefiles/react-lottie-player';
 import animate from '../../animation/message.json';
-import PAGES from '../../const/pages.js';
 import { useInView } from 'react-intersection-observer';
-
 import { useRef } from 'react';
 import useDragAndDrop from '../../hooks/useDragAndDrop.js';
+import { useDispatch, useSelector } from 'react-redux';
+import selectMessage from '../../store/message/selectors.js';
+import REQUEST_STATUS from '../../const/request.js';
+import fetchMessage from '../../store/message/thunk.js';
+import { incrementPage, resetMessage } from '../../store/message/slice.js';
+import { selectChatDetails } from '../../store/chatDetails/selectors.js';
+import getChatDetails from '../../store/chatDetails/thunk.js';
+import { fetchUserInfo } from '../../store/user/thunk.js';
+import selectUserInfoData from '../../store/user/selectors.js';
+import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
+import SendMessagesForm from '../../components/SendMessageForm/index.js';
 
 function MessageList() {
-  const navigate = useNavigate();
+  const {
+    status: messageStatus,
+    messages,
+    error: messageError,
+    page,
+    hasMore,
+  } = useSelector(selectMessage);
+  const {
+    status: userInfoStatus,
+    error: userInfoError,
+    details: userInfo,
+  } = useSelector(selectUserInfoData);
+  const {
+    status: chatStatus,
+    error: chatError,
+    items: chatDetails,
+  } = useSelector(selectChatDetails);
+
+  const isError = chatError || userInfoError || messageError;
+
+  const isLoading =
+    messageStatus === REQUEST_STATUS.LOADING ||
+    chatStatus === REQUEST_STATUS.LOADING ||
+    userInfoStatus === REQUEST_STATUS.LOADING;
+
+  const dispatch = useDispatch();
   const { chatId } = useParams();
-  const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [chatInfo, setChatInfo] = useState(null);
-  const [userDetail, setUserDetail] = useState(null);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
 
   const messageListRef = useRef(null); // Реф для контейнера с сообщениями
   const scrollPosition = useRef(0); // Реф для хранения позиции в процентах
@@ -35,48 +58,27 @@ function MessageList() {
     threshold: 0.5,
   });
 
-  useCentrifuge(chatId, setMessages);
-
-  const fetchAllData = async (currentPage) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const [messagesData, userData, chatData] = await Promise.all([
-        getMessages({ chatId, pageSize: 10, page: currentPage }),
-        getCurrentUser(),
-        getChatById(chatId),
-      ]);
-
-      setMessages((prevMessages) => [
-        ...messagesData.results.reverse(),
-        ...prevMessages,
-      ]);
-      setUserDetail(userData);
-      setChatInfo(chatData);
-
-      if (!messagesData.next) {
-        setHasMore(false);
-      }
-    } catch (err) {
-      if (err.message === 'Access token not found') {
-        navigate(PAGES.AUTH);
-      }
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useLayoutEffect(() => {
-    fetchAllData(page);
-  }, [page]);
+  const accessToken = useAuthErrorRedirect(isError);
 
   useEffect(() => {
-    if (inView && hasMore) {
-      setPage((prevPage) => prevPage + 1);
+    return () => {
+      dispatch(resetMessage());
+    };
+  }, [dispatch]);
+
+  useCentrifuge(chatId, accessToken);
+
+  useEffect(() => {
+    dispatch(getChatDetails({ chatId, accessToken }));
+    dispatch(fetchUserInfo({ accessToken }));
+    dispatch(fetchMessage({ chatId, page, accessToken }));
+  }, [accessToken, chatId, dispatch, page]);
+
+  useEffect(() => {
+    if (inView && hasMore && !isLoading) {
+      dispatch(incrementPage());
     }
-  }, [inView, hasMore]);
+  }, [inView, hasMore, dispatch, isLoading]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -93,7 +95,7 @@ function MessageList() {
   }, [page]);
 
   useEffect(() => {
-    if (!loading && messages.length > 0) {
+    if (!isLoading && messages.length > 0) {
       const { scrollHeight, clientHeight } = messageListRef.current;
 
       if (scrollPosition.current === 0) {
@@ -109,7 +111,7 @@ function MessageList() {
         );
       }
     }
-  }, [messages, loading]);
+  }, [messages, isLoading]);
 
   const {
     isDragging,
@@ -124,8 +126,8 @@ function MessageList() {
   return (
     <>
       <Header
-        name={chatInfo?.title}
-        img={chatInfo?.avatar ? chatInfo?.avatar : createAvatar(name)}
+        name={chatDetails?.title}
+        img={chatDetails?.avatar ? chatDetails?.avatar : createAvatar(name)}
       />
       <main
         onDragOver={handleDragOver}
@@ -134,18 +136,20 @@ function MessageList() {
         className={styles.chat}
       >
         <div ref={messageListRef} className={styles.message__list}>
-          {loading && <Spinner />}
-          {error && <p className={styles.message__error}>Ошибка: {error}</p>}
+          {isLoading && <Spinner />}
+          {isError && (
+            <p className={styles.message__error}>Ошибка: {isError}</p>
+          )}
 
-          {!loading &&
-            !error &&
+          {!isLoading &&
+            messageStatus === REQUEST_STATUS.SUCCESS &&
             (messages.length > 0 ? (
               messages.map(
                 ({ sender, text, created_at, id, voice, files }, index) => (
                   <MessagesItem
                     voice={voice}
                     ref={index === 0 ? ref : null}
-                    isSender={sender?.id === userDetail?.id}
+                    isSender={sender?.id === userInfo?.id}
                     name={sender.username}
                     key={id}
                     text={text}
@@ -171,6 +175,7 @@ function MessageList() {
           setFiles={setFiles}
           files={files}
           chatId={chatId}
+          accessToken={accessToken}
         />
         {isDragging && (
           <div className={styles.dropArea}>

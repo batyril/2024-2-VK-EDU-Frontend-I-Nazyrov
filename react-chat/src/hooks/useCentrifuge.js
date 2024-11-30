@@ -1,23 +1,33 @@
 import { useEffect } from 'react';
 import { Centrifuge } from 'centrifuge';
-import getCurrentUser from '../api/user/getCurrentUser.js';
-import {
-  getCentrifugoToken,
-  getSubscribeToken,
-} from '../api/centrifugo/index.js';
+
 import EVENT_CENTRIFUGO from '../const/events.js';
 import sendNotification from '../helpers/sendNotification.js';
+import { userService } from '../api/userService/index.js';
+import { useDispatch } from 'react-redux';
+import centrifugoService from '../api/centrifugo/index.js';
+import {
+  addMessage,
+  deleteMessage,
+  updateMessage,
+} from '../store/message/slice.js';
 
-const useCentrifuge = (chatId, setMessages) => {
+const useCentrifuge = (chatId, accessToken) => {
+  const dispatch = useDispatch();
+  const { getCurrentUser } = userService();
+  const { getToken, getSubscribeToken } = centrifugoService();
   useEffect(() => {
     let centrifuge;
     let subscription;
 
     const initializeCentrifuge = async () => {
       try {
-        const userData = await getCurrentUser();
-        const connectToken = await getCentrifugoToken();
-        const subscribeToken = await getSubscribeToken(userData.id);
+        const userData = await getCurrentUser({ accessToken });
+        const connectToken = await getToken(accessToken);
+        const subscribeToken = await getSubscribeToken(
+          userData.id,
+          accessToken,
+        );
 
         centrifuge = new Centrifuge(
           'wss://vkedu-fullstack-div2.ru/connection/websocket/',
@@ -39,30 +49,20 @@ const useCentrifuge = (chatId, setMessages) => {
             sendNotification(message);
             return;
           }
-          setMessages((prevMessages) => {
-            switch (event) {
-              case EVENT_CENTRIFUGO.CREATE: {
-                const checkDuplication = prevMessages.some(
-                  (msg) => msg.id === message.id,
-                );
 
-                if (checkDuplication) return prevMessages;
-
-                return [...prevMessages, message];
-              }
-
-              case EVENT_CENTRIFUGO.UPDATE:
-                return prevMessages.map((msg) =>
-                  msg.id === message.id ? message : msg,
-                );
-
-              case EVENT_CENTRIFUGO.DELETE:
-                return prevMessages.filter((msg) => msg.id !== message.id);
-
-              default:
-                return prevMessages;
-            }
-          });
+          switch (event) {
+            case EVENT_CENTRIFUGO.CREATE:
+              dispatch(addMessage(message));
+              break;
+            case EVENT_CENTRIFUGO.UPDATE:
+              dispatch(updateMessage(message));
+              break;
+            case EVENT_CENTRIFUGO.DELETE:
+              dispatch(deleteMessage(message.id));
+              break;
+            default:
+              break;
+          }
         });
 
         subscription.subscribe();
@@ -70,17 +70,16 @@ const useCentrifuge = (chatId, setMessages) => {
       } catch (error) {
         console.error('Failed to initialize Centrifuge:', error);
       }
+
       return () => {
-        return () => {
-          centrifuge.disconnect();
-          subscription.removeAllListeners();
-          subscription.unsubscribe();
-        };
+        centrifuge.disconnect();
+        subscription.removeAllListeners();
+        subscription.unsubscribe();
       };
     };
 
     initializeCentrifuge();
-  }, [chatId, setMessages]);
+  }, [chatId, dispatch]);
 };
 
 export default useCentrifuge;
