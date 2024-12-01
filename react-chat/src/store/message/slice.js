@@ -32,7 +32,7 @@ export const messageSlice = createSlice({
         (msg) => msg.id === newMessage.id,
       );
       if (!isDuplicate) {
-        state.messages.push(newMessage);
+        state.messages.unshift(newMessage);
       }
     },
     updateMessage: (state, action) => {
@@ -57,10 +57,7 @@ export const messageSlice = createSlice({
         if (state.page === 1) {
           state.messages = [...action.payload.results];
         } else {
-          state.messages = [
-            ...state.messages,
-            ...action.payload.results,
-          ].reverse();
+          state.messages = [...state.messages, ...action.payload.results];
         }
 
         state.hasMore = action.payload.next !== null;

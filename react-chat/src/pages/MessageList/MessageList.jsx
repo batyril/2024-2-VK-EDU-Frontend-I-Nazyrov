@@ -54,9 +54,6 @@ function MessageList() {
 
   const messageListRef = useRef(null); // Реф для контейнера с сообщениями
   const scrollPosition = useRef(0); // Реф для хранения позиции в процентах
-  const { ref, inView } = useInView({
-    threshold: 0.5,
-  });
 
   const accessToken = useAuthErrorRedirect(isError);
 
@@ -68,6 +65,16 @@ function MessageList() {
 
   useCentrifuge(chatId, accessToken);
 
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+  });
+
+  useEffect(() => {
+    if (page > 1 && !isLoading) {
+      messageListRef.current.scrollTop = scrollPosition.current;
+    }
+  }, [isLoading, page]);
+
   useEffect(() => {
     dispatch(getChatDetails({ chatId, accessToken }));
     dispatch(fetchUserInfo({ accessToken }));
@@ -76,42 +83,10 @@ function MessageList() {
 
   useEffect(() => {
     if (inView && hasMore && !isLoading) {
+      scrollPosition.current = messageListRef.current.scrollTop;
       dispatch(incrementPage());
     }
-  }, [inView, hasMore, dispatch, isLoading]);
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (messageListRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } =
-          messageListRef.current;
-        scrollPosition.current =
-          (scrollTop / (scrollHeight - clientHeight)) * 100;
-      }
-    };
-
-    handleBeforeUnload();
-    return () => handleBeforeUnload();
-  }, [page]);
-
-  useEffect(() => {
-    if (!isLoading && messages.length > 0) {
-      const { scrollHeight, clientHeight } = messageListRef.current;
-
-      if (scrollPosition.current === 0) {
-        messageListRef.current.scrollTop = scrollHeight - clientHeight;
-      } else {
-        const savedScrollPosition = scrollPosition.current / 100;
-        const targetScroll =
-          (scrollHeight - clientHeight) * (savedScrollPosition + 0.2);
-
-        messageListRef.current.scrollTop = Math.min(
-          targetScroll,
-          scrollHeight - clientHeight,
-        );
-      }
-    }
-  }, [messages, isLoading]);
+  }, [inView, hasMore, isLoading, dispatch]);
 
   const {
     isDragging,
@@ -135,7 +110,7 @@ function MessageList() {
         onDrop={handleDrop}
         className={styles.chat}
       >
-        <div ref={messageListRef} className={styles.message__list}>
+        <div id='list' ref={messageListRef} className={styles.message__list}>
           {isLoading && <Spinner />}
           {isError && (
             <p className={styles.message__error}>Ошибка: {isError}</p>
@@ -148,7 +123,7 @@ function MessageList() {
                 ({ sender, text, created_at, id, voice, files }, index) => (
                   <MessagesItem
                     voice={voice}
-                    ref={index === 0 ? ref : null}
+                    ref={index === messages.length - 1 ? ref : null}
                     isSender={sender?.id === userInfo?.id}
                     name={sender.username}
                     key={id}
