@@ -11,8 +11,8 @@ import { toast } from 'react-toastify';
 import selectUserInfoData from '../../store/user/selectors.js';
 import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
 import REQUEST_STATUS from '../../const/request.js';
-import Spinner from '../Spinner/index.js';
 import { clearError } from '../../store/user/slice.js';
+import AvatarUploader from '../AvatarUploader/AvatarUploader.jsx';
 
 function ProfileForm() {
   const dispatch = useDispatch();
@@ -22,7 +22,6 @@ function ProfileForm() {
     details,
   } = useSelector(selectUserInfoData);
 
-  console.log(fetchError);
   const accessToken = useAuthErrorRedirect(fetchError);
 
   useLayoutEffect(() => {
@@ -77,7 +76,7 @@ function ProfileForm() {
 
   const handleReset = () => {
     setFormValues({ first_name: '', last_name: '', username: '', bio: '' });
-    setPreviewAvatar(details?.avatar || '');
+    setPreviewAvatar('');
     clearErrors();
     clearError();
   };
@@ -101,6 +100,11 @@ function ProfileForm() {
   return (
     <>
       <form noValidate className={styles.form} onSubmit={handleSubmit}>
+        <AvatarUploader
+          error={fetchError?.avatar?.[0]}
+          avatarUrl={previewAvatar}
+          handleChange={handleChange}
+        />
         <FormInput
           label='Имя*'
           name='first_name'
@@ -129,16 +133,6 @@ function ProfileForm() {
           value={formValues.bio}
           onChange={handleChange}
           error={errors.bio || fetchError?.bio?.[0]}
-        />
-        <img className={styles.avatar} src={previewAvatar} alt='avatar' />
-        <FormInput
-          as='input'
-          type='file'
-          label='Загрузите аватарку:'
-          name='avatar'
-          onChange={handleChange}
-          error={fetchError?.avatar?.[0]}
-          accept='image/*'
         />
         <div className={styles.buttons}>
           <Button text='Очистить' onClick={handleReset} type='reset' />

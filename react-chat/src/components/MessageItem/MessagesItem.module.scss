@@ -46,6 +46,10 @@
     font-size: 15px;
     max-width: 90%;
 
+    audio {
+      border-radius: 15px;
+    }
+
     &Other {
       background-color: $grey;
       align-self: flex-start;
@@ -62,16 +66,26 @@
 }
 
 .message__images {
+  &:first-child {
+    margin-top: 0;
+  }
+
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 10px;
+  img {
+    border-radius: 8px;
+  }
 }
 
 .message__image {
   max-width: 300px;
   max-height: 200px;
   object-fit: cover;
+  img {
+    border-radius: 15px;
+  }
 }
 
 .message__imageSingle {

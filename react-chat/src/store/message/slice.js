@@ -5,6 +5,7 @@ import fetchMessage from './thunk.js';
 export const messageSlice = createSlice({
   name: 'message',
   initialState: {
+    count: null,
     messages: [],
     status: null,
     error: null,
@@ -26,7 +27,6 @@ export const messageSlice = createSlice({
       state.error = null;
     },
     addMessage: (state, action) => {
-      console.log('addMessage', action);
       const newMessage = action.payload;
       const isDuplicate = state.messages.some(
         (msg) => msg.id === newMessage.id,
@@ -54,10 +54,18 @@ export const messageSlice = createSlice({
       })
       .addCase(fetchMessage.fulfilled, (state, action) => {
         state.status = REQUEST_STATUS.SUCCESS;
-        if (state.page === 1) {
-          state.messages = [...action.payload.results];
+        state.count = action.payload.count;
+        const newMessages = action.payload.results;
+        const isFirstPage = state.page === 1;
+
+        const uniqueMessages = newMessages.filter(
+          (newMsg) => !state.messages.some((msg) => msg.id === newMsg.id),
+        );
+
+        if (isFirstPage) {
+          state.messages = uniqueMessages;
         } else {
-          state.messages = [...state.messages, ...action.payload.results];
+          state.messages = [...state.messages, ...uniqueMessages];
         }
 
         state.hasMore = action.payload.next !== null;

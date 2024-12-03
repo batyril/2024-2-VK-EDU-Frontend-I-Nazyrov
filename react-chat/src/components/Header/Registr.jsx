@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 function Header({ name }) {
   return (
-    <header className={clsx(styles.header, styles.header__registr)}>
+    <header className={clsx(styles.header)}>
       <Link to={PAGES.AUTH}>
         <div className={styles.header__icon}>
           <ArrowBackIos className={styles.header__back} />{' '}
@@ -16,6 +16,7 @@ function Header({ name }) {
       <div className={styles.header__text}>
         <p className={styles.header__username}>{name}</p>
       </div>
+      <div></div>
     </header>
   );
 }

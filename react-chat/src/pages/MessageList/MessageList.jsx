@@ -30,6 +30,7 @@ function MessageList() {
     error: messageError,
     page,
     hasMore,
+    count,
   } = useSelector(selectMessage);
   const {
     status: userInfoStatus,
@@ -48,7 +49,6 @@ function MessageList() {
     messageStatus === REQUEST_STATUS.LOADING ||
     chatStatus === REQUEST_STATUS.LOADING ||
     userInfoStatus === REQUEST_STATUS.LOADING;
-
   const dispatch = useDispatch();
   const { chatId } = useParams();
 
@@ -76,9 +76,12 @@ function MessageList() {
   }, [isLoading, page]);
 
   useEffect(() => {
+    dispatch(fetchMessage({ chatId, page, accessToken, page_size: 20 }));
+  }, [accessToken, chatId, dispatch, page]);
+
+  useEffect(() => {
     dispatch(getChatDetails({ chatId, accessToken }));
     dispatch(fetchUserInfo({ accessToken }));
-    dispatch(fetchMessage({ chatId, page, accessToken }));
   }, [accessToken, chatId, dispatch, page]);
 
   useEffect(() => {
@@ -111,39 +114,39 @@ function MessageList() {
         className={styles.chat}
       >
         <div id='list' ref={messageListRef} className={styles.message__list}>
-          {isLoading && <Spinner />}
+          {isLoading && page === 1 && messages.length === 0 && <Spinner />}
           {isError && (
             <p className={styles.message__error}>Ошибка: {isError}</p>
           )}
 
-          {!isLoading &&
-            messageStatus === REQUEST_STATUS.SUCCESS &&
-            (messages.length > 0 ? (
-              messages.map(
-                ({ sender, text, created_at, id, voice, files }, index) => (
-                  <MessagesItem
-                    voice={voice}
-                    ref={index === messages.length - 1 ? ref : null}
-                    isSender={sender?.id === userInfo?.id}
-                    name={sender.username}
-                    key={id}
-                    text={text}
-                    time={created_at}
-                    files={files}
-                  />
-                ),
-              )
-            ) : (
-              <div className={styles.message__empty}>
-                <Player
-                  autoplay
-                  loop
-                  src={animate}
-                  style={{ height: '200px', width: '200px' }}
+          {messages.length > 0 &&
+            messages.map((message, index) => {
+              const lasView = index === messages.length - 10 ? ref : null;
+              return (
+                <MessagesItem
+                  voice={message.voice}
+                  ref={lasView}
+                  isSender={message.sender?.id === userInfo?.id}
+                  name={message.sender.username}
+                  key={message.id}
+                  text={message.text}
+                  time={message.created_at}
+                  files={message.files}
                 />
-                Здесь пока нет сообщений. Начните общение!
-              </div>
-            ))}
+              );
+            })}
+
+          {count === 0 && !isLoading && (
+            <div className={styles.message__empty}>
+              <Player
+                autoplay
+                loop
+                src={animate}
+                style={{ height: '200px', width: '200px' }}
+              />
+              Здесь пока нет сообщений. Начните общение!
+            </div>
+          )}
         </div>
         <SendMessagesForm
           deleteFile={deleteFile}

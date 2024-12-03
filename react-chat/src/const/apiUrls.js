@@ -2,7 +2,7 @@ export const ENDPOINTS = {
   REGISTER: '/api/register/',
   AUTH: '/api/auth/',
   CURRENT_USER: '/api/user/current/',
-  USERS: '/api/users',
+  USERS: '/api/users/',
   USER: (id) => `/api/user/${id}`,
   MESSAGES: '/api/messages/',
   CHATS: '/api/chats/',

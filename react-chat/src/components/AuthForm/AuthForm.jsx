@@ -1,13 +1,13 @@
 import * as styles from './AuthForm.module.scss';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import PAGES from '../../const/pages.js';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
 import { userService } from '../../api/userService/index.js';
 import { setTokens } from '../../store/auth/slice.js';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 function AuthForm() {
   const navigate = useNavigate();
@@ -45,14 +45,12 @@ function AuthForm() {
       navigate(PAGES.CHAT_LIST);
     } catch (error) {
       if (
-        (error.response && error.response.data.password) ||
-        error.response.data.username
+        (error.response && error.response?.data?.password) ||
+        error.response?.data?.username
       ) {
         setError(error.response.data);
       } else {
-        setError({
-          general: 'Не удалось войти в систему',
-        });
+        toast.error(error.message);
       }
     } finally {
       setLoading(false);
@@ -84,8 +82,6 @@ function AuthForm() {
       />
 
       <Button isLoading={loading} text='Войти' type='submit' />
-
-      {error.general && <ErrorMessage message={error.general} />}
     </form>
   );
 }

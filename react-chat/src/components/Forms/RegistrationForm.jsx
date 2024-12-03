@@ -2,12 +2,13 @@ import * as styles from './Forms.module.scss';
 import { useState } from 'react';
 import useFormValidation from '../../hooks/useFormValidation';
 import validateProfileForm from '../../helpers/validateProfileForm';
-import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import { useNavigate } from 'react-router-dom';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
 import PAGES from '../../const/pages.js';
 import { userService } from '../../api/userService/index.js';
+import AvatarUploader from '../AvatarUploader/AvatarUploader.jsx';
+import { toast } from 'react-toastify';
 
 function RegistrationForm() {
   const { registerUser } = userService();
@@ -21,6 +22,7 @@ function RegistrationForm() {
     bio: '',
     avatar: '',
   });
+  const [previewAvatar, setPreviewAvatar] = useState('');
   const [error, setError] = useState({});
   const { errors, validateValues, clearFieldError, clearErrors } =
     useFormValidation(formValues, validateProfileForm);
@@ -28,6 +30,9 @@ function RegistrationForm() {
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === 'file') {
+      const file = files[0];
+      const fileURL = URL.createObjectURL(file);
+      setPreviewAvatar(fileURL);
       setFormValues((prevValues) => ({
         ...prevValues,
         [name]: files[0],
@@ -53,6 +58,7 @@ function RegistrationForm() {
     });
     clearErrors();
     setError({});
+    setPreviewAvatar('');
   };
 
   const handleRegisterUser = async () => {
@@ -65,7 +71,7 @@ function RegistrationForm() {
       if (error.response && error.response.data) {
         setError(error.response.data);
       } else {
-        setError({ general: 'Ошибка регистрации. Попробуйте снова.' });
+        toast.error(error.message);
       }
     } finally {
       setLoading(false);
@@ -82,6 +88,11 @@ function RegistrationForm() {
 
   return (
     <form noValidate className={styles.form} onSubmit={handleSubmit}>
+      <AvatarUploader
+        error={error.avatar?.[0]}
+        avatarUrl={previewAvatar}
+        handleChange={handleChange}
+      />
       <FormInput
         label='Имя*'
         name='first_name'
@@ -119,22 +130,10 @@ function RegistrationForm() {
         onChange={handleChange}
         error={errors.bio || error.bio?.[0]}
       />
-
-      <FormInput
-        as='input'
-        type='file'
-        label='Загрузите аватарку:'
-        name='avatar'
-        onChange={handleChange}
-        error={error.avatar?.[0]}
-        accept='image/*'
-      />
-
       <div className={styles.buttons}>
         <Button text='Очистить' onClick={handleReset} type='reset' />
         <Button isLoading={loading} text='Сохранить' type='submit' />
       </div>
-      {error.general && <ErrorMessage message={error.general} />}
     </form>
   );
 }

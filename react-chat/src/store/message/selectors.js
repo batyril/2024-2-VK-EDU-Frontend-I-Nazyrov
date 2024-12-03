@@ -9,6 +9,7 @@ export const selectMessage = createSelector(selectMessageState, (state) => ({
   page: state.page,
   hasMore: state.hasMore,
   search: state.search,
+  count: state.count,
 }));
 
 export default selectMessage;

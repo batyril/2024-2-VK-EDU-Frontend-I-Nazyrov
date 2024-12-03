@@ -1,7 +1,7 @@
 import * as styles from './MessagesItem.module.scss';
 import formatTime from '../../helpers/FormatTime.js';
 import clsx from 'clsx';
-import { forwardRef } from 'react';
+import { forwardRef, memo } from 'react';
 import DoneAll from '@mui/icons-material/DoneAll';
 
 const MessagesItem = forwardRef(function MessagesItem(
@@ -54,4 +54,4 @@ const MessagesItem = forwardRef(function MessagesItem(
   );
 });
 
-export default MessagesItem;
+export default memo(MessagesItem);
