@@ -35,7 +35,7 @@ function SendMessagesForm({
 
   const handleSubmit = async (
     e,
-    { voice = null, location = null, files = null } = {},
+    { voice = null, location = null, files = null, fileText = null } = {},
   ) => {
     if (e) e.preventDefault();
     if (isSending) return;
@@ -52,7 +52,7 @@ function SendMessagesForm({
         newMessage = { text: location, chatId };
         break;
       case files !== null:
-        newMessage = { chatId, files };
+        newMessage = { chatId, files, text: fileText };
         break;
       default:
         if (!trimmedInputText) {

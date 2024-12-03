@@ -43,7 +43,9 @@ const MessagesItem = forwardRef(function MessagesItem(
           )}
         </div>
       )}
-      <div className={styles.message__wrapper}>
+      <div
+        className={clsx(styles.message__wrapper, files && styles.file__wrapper)}
+      >
         {/*<p className={styles.message__name}>{name}</p>*/}
         <p className={styles.message__text}>{text}</p>
         <div className={styles.message__status}>
