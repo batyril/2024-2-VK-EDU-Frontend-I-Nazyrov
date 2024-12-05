@@ -16,8 +16,8 @@ const localStorageMiddleware = (store) => (next) => (action) => {
 
 const persistedState = {
   auth: {
-    accessToken: localStorage.getItem('accessToken') || null,
-    refreshToken: localStorage.getItem('refreshToken') || null,
+    accessToken: localStorage.getItem('accessToken') || '',
+    refreshToken: localStorage.getItem('refreshToken') || '',
   },
 };
 

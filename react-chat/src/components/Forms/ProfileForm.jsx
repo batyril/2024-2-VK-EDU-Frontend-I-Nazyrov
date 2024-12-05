@@ -10,9 +10,8 @@ import { fetchUserInfo, fetchUserUpdate } from '../../store/user/thunk.js';
 import { toast } from 'react-toastify';
 import selectUserInfoData from '../../store/user/selectors.js';
 import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
-import REQUEST_STATUS from '../../const/request.js';
-import { clearError } from '../../store/user/slice.js';
 import AvatarUploader from '../AvatarUploader/AvatarUploader.jsx';
+import REQUEST_STATUS from '../../const/request.js';
 
 function ProfileForm() {
   const dispatch = useDispatch();
@@ -21,12 +20,23 @@ function ProfileForm() {
     error: fetchError,
     details,
   } = useSelector(selectUserInfoData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const accessToken = useAuthErrorRedirect(fetchError);
+  useAuthErrorRedirect(fetchError);
 
   useLayoutEffect(() => {
-    dispatch(fetchUserInfo({ accessToken }));
-  }, [accessToken, dispatch]);
+    dispatch(fetchUserInfo());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isSubmitting) {
+      if (status === REQUEST_STATUS.SUCCESS && !fetchError) {
+        toast('Данные успешно сохранены');
+      } else if (fetchError) {
+        toast.error('Ошибка при сохранении данных');
+      }
+    }
+  }, [status, fetchError, isSubmitting]);
 
   const [formValues, setFormValues] = useState({
     first_name: '',
@@ -49,8 +59,10 @@ function ProfileForm() {
     setPreviewAvatar(details?.avatar || '');
   }, [details]);
 
-  const { errors, validateValues, clearFieldError, clearErrors } =
-    useFormValidation(formValues, validateProfileForm);
+  const { errors, validateValues, clearFieldError } = useFormValidation(
+    formValues,
+    validateProfileForm,
+  );
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -74,15 +86,8 @@ function ProfileForm() {
     clearFieldError(name);
   };
 
-  const handleReset = () => {
-    setFormValues({ first_name: '', last_name: '', username: '', bio: '' });
-    setPreviewAvatar('');
-    clearErrors();
-    clearError();
-  };
-
-  const handleChangeUserDetails = async (data) => {
-    await dispatch(fetchUserUpdate({ id: details.id, ...data, accessToken }));
+  const updateUserDetails = async (data) => {
+    await dispatch(fetchUserUpdate({ id: details.id, ...data }));
   };
 
   const handleSubmit = async (e) => {
@@ -90,11 +95,9 @@ function ProfileForm() {
 
     if (!validateValues(formValues)) return;
 
-    await handleChangeUserDetails(formValues);
-
-    if (!fetchError) {
-      toast('Данные успешно сохранены');
-    }
+    setIsSubmitting(true);
+    await updateUserDetails(formValues);
+    setIsSubmitting(false);
   };
 
   return (
@@ -135,7 +138,6 @@ function ProfileForm() {
           error={errors.bio || fetchError?.bio?.[0]}
         />
         <div className={styles.buttons}>
-          <Button text='Очистить' onClick={handleReset} type='reset' />
           <Button
             isLoading={status === REQUEST_STATUS.LOADING}
             text='Сохранить'

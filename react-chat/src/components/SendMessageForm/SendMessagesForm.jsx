@@ -11,13 +11,7 @@ import ModalFiles from '../ModalFiles/index.js';
 import AttachDropdown from '../AttachDropdown/index.js';
 import { messageService } from '../../api/messages/index.js';
 
-function SendMessagesForm({
-  chatId,
-  files,
-  setFiles,
-  deleteFile,
-  accessToken,
-}) {
+function SendMessagesForm({ chatId, files, setFiles, deleteFile }) {
   const { sendMessage } = messageService();
   const [inputText, setInputText] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -63,7 +57,7 @@ function SendMessagesForm({
     }
 
     try {
-      await sendMessage({ ...newMessage, accessToken });
+      await sendMessage({ ...newMessage });
       setInputText('');
       setFiles([]);
       fileInputRef.current.value = '';

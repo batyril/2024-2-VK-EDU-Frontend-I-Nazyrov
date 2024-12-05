@@ -9,11 +9,6 @@ export const userSlice = createSlice({
     status: null,
     error: null,
   },
-  reducers: {
-    clearError: (state) => {
-      state.error = null;
-    },
-  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserInfo.pending, (state) => {
@@ -38,16 +33,10 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUserUpdate.rejected, (state, action) => {
         state.status = REQUEST_STATUS.ERROR;
-        if (action.payload) {
-          state.error = action.payload;
-        } else {
-          state.error = action.error.message;
-        }
+        state.error = action.error.message;
       })
       .addDefaultCase(() => {});
   },
 });
-
-export const { clearError } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,11 +1,5 @@
 const getAccessToken = () => {
-  const accessToken = localStorage.getItem('accessToken');
-
-  if (!accessToken) {
-    throw new Error('Access token not found');
-  }
-
-  return accessToken;
+  return localStorage.getItem('accessToken');
 };
 
 export default getAccessToken;

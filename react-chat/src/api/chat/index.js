@@ -1,43 +1,29 @@
-import axios from 'axios';
 import { createUrl, ENDPOINTS } from '../../const/apiUrls.js';
-import getHeaders from '../../helpers/getHeaders.js';
-
+import axios from '../axiosConfig.js';
+import getAccessToken from '../../helpers/getAccessToken.js';
 export const chatService = () => {
   const createChat = async ({ members, isPrivate, title, avatar }) => {
-    const response = await axios.post(
-      createUrl(ENDPOINTS.CHATS),
-      {
-        members: members,
-        is_private: isPrivate,
-        // avatar: avatar,
-      },
-      {
-        headers: getHeaders('application/json', true),
-      },
-    );
-
-    return response.data;
-  };
-  const getChatById = async ({ chatId, accessToken }) => {
-    const response = await axios.get(createUrl(ENDPOINTS.CHAT(chatId)), {
-      headers: getHeaders('application/json', accessToken),
+    const response = await axios.post(createUrl(ENDPOINTS.CHATS), {
+      members: members,
+      is_private: isPrivate,
+      // avatar: avatar,
     });
 
     return response.data;
   };
-  const getChats = async ({
-    page = 1,
-    page_size = 10,
-    search = '',
-    accessToken,
-  }) => {
+  const getChatById = async ({ chatId }) => {
+    const response = await axios.get(createUrl(ENDPOINTS.CHAT(chatId)));
+
+    return response.data;
+  };
+  const getChats = async ({ page = 1, page_size = 10, search = '' }) => {
     const response = await axios.get(createUrl(ENDPOINTS.CHATS), {
-      headers: getHeaders('application/json', accessToken),
       params: {
         page,
         page_size,
         search,
       },
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
     });
 
     return response.data;

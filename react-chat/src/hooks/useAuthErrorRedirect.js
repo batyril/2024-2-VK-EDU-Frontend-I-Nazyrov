@@ -1,25 +1,17 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PAGES from '../const/pages';
-import { useSelector } from 'react-redux';
+import getAccessToken from '../helpers/getAccessToken.js';
 
-const useAuthErrorRedirect = (error) => {
-  const accessToken = useSelector((state) => state.auth.accessToken);
+const useAuthErrorRedirect = () => {
   const navigate = useNavigate();
 
-  if (!accessToken) {
-    navigate(PAGES.AUTH);
-  }
-
   useEffect(() => {
-    if (
-      error === 'Access token not found' ||
-      error === 'Request failed with status code 401'
-    ) {
+    const accessToken = getAccessToken();
+    if (!accessToken) {
       navigate(PAGES.AUTH);
     }
-  }, [error, navigate]);
-
-  return accessToken;
+  }, [navigate]);
 };
+
 export default useAuthErrorRedirect;

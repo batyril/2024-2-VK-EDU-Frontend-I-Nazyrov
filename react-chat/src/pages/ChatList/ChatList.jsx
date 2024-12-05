@@ -21,7 +21,7 @@ function ChatList() {
   const dispatch = useDispatch();
   const containerRef = useRef(null);
   const scrollPositionRef = useRef(0);
-  const accessToken = useAuthErrorRedirect(error);
+  useAuthErrorRedirect(error);
   useEffect(() => {
     return () => {
       dispatch(resetChats());
@@ -32,8 +32,8 @@ function ChatList() {
     if (page > 1) {
       scrollPositionRef.current = containerRef.current.scrollTop;
     }
-    dispatch(fetchChat({ page, accessToken }));
-  }, [accessToken, dispatch, page]);
+    dispatch(fetchChat({ page }));
+  }, [dispatch, page]);
 
   useEffect(() => {
     if (page > 1) {

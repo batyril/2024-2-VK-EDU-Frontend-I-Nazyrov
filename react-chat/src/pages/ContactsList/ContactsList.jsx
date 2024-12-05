@@ -25,14 +25,14 @@ function ContactsList() {
     };
   }, [dispatch]);
 
-  const accessToken = useAuthErrorRedirect(error);
+  useAuthErrorRedirect(error);
 
   useEffect(() => {
     if (page > 1) {
       scrollPositionRef.current = containerRef.current.scrollTop;
     }
-    dispatch(fetchContacts({ page, accessToken }));
-  }, [page]);
+    dispatch(fetchContacts({ page }));
+  }, [dispatch, page]);
 
   useEffect(() => {
     if (page > 1) {

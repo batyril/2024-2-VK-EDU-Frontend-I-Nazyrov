@@ -3,9 +3,9 @@ import chatService from '../../api/chat/index.js';
 
 export const getChatDetails = createAsyncThunk(
   'chat/getChatDetails',
-  async ({ chatId, accessToken }) => {
+  async ({ chatId }) => {
     const { getChatById } = chatService();
-    return await getChatById({ chatId, accessToken });
+    return await getChatById({ chatId });
   },
 );
 
