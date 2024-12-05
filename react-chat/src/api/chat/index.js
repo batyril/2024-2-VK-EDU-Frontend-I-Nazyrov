@@ -3,16 +3,22 @@ import axios from '../axiosConfig.js';
 import getAccessToken from '../../helpers/getAccessToken.js';
 export const chatService = () => {
   const createChat = async ({ members, isPrivate, title, avatar }) => {
-    const response = await axios.post(createUrl(ENDPOINTS.CHATS), {
-      members: members,
-      is_private: isPrivate,
-      // avatar: avatar,
-    });
+    const response = await axios.post(
+      createUrl(ENDPOINTS.CHATS),
+      {
+        members: members,
+        is_private: isPrivate,
+        // avatar: avatar,
+      },
+      { headers: { Authorization: `Bearer ${getAccessToken()}` } },
+    );
 
     return response.data;
   };
   const getChatById = async ({ chatId }) => {
-    const response = await axios.get(createUrl(ENDPOINTS.CHAT(chatId)));
+    const response = await axios.get(createUrl(ENDPOINTS.CHAT(chatId)), {
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
+    });
 
     return response.data;
   };

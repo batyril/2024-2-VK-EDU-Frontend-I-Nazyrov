@@ -1,5 +1,6 @@
 import { createUrl, ENDPOINTS } from '../../const/apiUrls.js';
 import axios from '../axiosConfig.js';
+import getAccessToken from '../../helpers/getAccessToken.js';
 
 export const messageService = () => {
   const getMessages = async ({
@@ -15,6 +16,7 @@ export const messageService = () => {
         page: page,
         page_size: pageSize,
       },
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
     });
 
     return response.data;
@@ -37,7 +39,10 @@ export const messageService = () => {
     }
 
     const response = await axios.post(createUrl(ENDPOINTS.MESSAGES), formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
     });
 
     return response.data;

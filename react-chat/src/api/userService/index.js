@@ -1,5 +1,6 @@
 import axios from '../axiosConfig.js';
 import { createUrl, ENDPOINTS } from '../../const/apiUrls.js';
+import getAccessToken from '../../helpers/getAccessToken.js';
 
 export const userService = () => {
   const authUser = async ({ username, password }) => {
@@ -17,13 +18,16 @@ export const userService = () => {
         page_size,
         search,
       },
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
     });
 
     return response.data;
   };
 
   const getCurrentUser = async () => {
-    const response = await axios.get(createUrl(ENDPOINTS.CURRENT_USER));
+    const response = await axios.get(createUrl(ENDPOINTS.CURRENT_USER), {
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
+    });
     return response.data;
   };
 
@@ -44,7 +48,9 @@ export const userService = () => {
     formData.append('avatar', avatar);
 
     const response = await axios.post(createUrl(ENDPOINTS.REGISTER), formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
     return response.data;
   };
@@ -71,7 +77,10 @@ export const userService = () => {
       createUrl(ENDPOINTS.USER(id)),
       formData,
       {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
       },
     );
     return response.data;
