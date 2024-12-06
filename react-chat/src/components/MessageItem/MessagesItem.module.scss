@@ -30,6 +30,7 @@
     display: flex;
     gap: 10px;
     align-items: flex-end;
+    justify-content: flex-end;
     svg {
       width: 0.7em;
       height: 0.7em;
@@ -44,6 +45,10 @@
     flex-direction: column;
     font-size: 15px;
     max-width: 90%;
+
+    audio {
+      border-radius: 15px;
+    }
 
     &Other {
       background-color: $grey;
@@ -61,9 +66,20 @@
 }
 
 .message__images {
+  &:first-child {
+    margin-top: 0;
+  }
+
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 10px;
+  img {
+    border-radius: 8px;
+  }
+}
+
+.file__wrapper {
   margin-top: 10px;
 }
 
@@ -71,6 +87,9 @@
   max-width: 300px;
   max-height: 200px;
   object-fit: cover;
+  img {
+    border-radius: 15px;
+  }
 }
 
 .message__imageSingle {

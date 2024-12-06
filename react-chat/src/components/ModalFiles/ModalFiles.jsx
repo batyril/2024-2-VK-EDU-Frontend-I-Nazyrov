@@ -1,8 +1,9 @@
 import * as styles from './ModalFiles.module.scss';
 import ModalBase from '../ModalBase/ModalBase.jsx';
-import Button from '../Button/Button.jsx';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import SendIcon from '@mui/icons-material/Send';
+import Spinner from '../Spinner/index.js';
 
 const ModalFiles = ({
   files,
@@ -12,11 +13,22 @@ const ModalFiles = ({
   isSending,
   deleteFile,
 }) => {
+  const [message, setMessage] = useState('');
+
   useEffect(() => {
     if (files.length === 0 && isModalOpen) {
       handleClose();
     }
   }, [files]);
+
+  const handleInputChange = (event) => {
+    setMessage(event.target.value);
+  };
+
+  const handleSend = () => {
+    handleSubmit(null, { files, fileText: message.trim() });
+    setMessage('');
+  };
 
   return (
     <ModalBase isOpen={isModalOpen} onClose={handleClose}>
@@ -45,13 +57,28 @@ const ModalFiles = ({
             </li>
           ))}
         </ul>
-        <Button
-          disabled={files.length === 0}
-          text='Отправить'
-          type='submit'
-          isLoading={isSending}
-          onClick={() => handleSubmit(null, { files })}
-        />
+        <div className={styles.inputWrapper}>
+          <input
+            className={styles.input}
+            placeholder='Введите сообщение'
+            onChange={handleInputChange}
+            type='text'
+            value={message}
+          />
+
+          <button
+            onClick={handleSend}
+            type='submit'
+            className={styles.form__send}
+            disabled={files.length === 0 && !message.trim()}
+          >
+            {isSending ? (
+              <Spinner width={20} height={20} />
+            ) : (
+              <SendIcon className={styles.form__sendIcon} />
+            )}
+          </button>
+        </div>
       </div>
     </ModalBase>
   );

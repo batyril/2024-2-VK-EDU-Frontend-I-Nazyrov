@@ -1,14 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import FormInput from '../FormElement/index.js';
 import Button from '../Button/Button.jsx';
 
 import useFormValidation from '../../hooks/useFormValidation';
 import validateProfileForm from '../../helpers/validateProfileForm';
-import updateUser from '../../api/user/updateUser.js';
 import * as styles from './Forms.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserInfo, fetchUserUpdate } from '../../store/user/thunk.js';
+import { toast } from 'react-toastify';
+import selectUserInfoData from '../../store/user/selectors.js';
+import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
+import REQUEST_STATUS from '../../const/request.js';
+import { clearError } from '../../store/user/slice.js';
+import AvatarUploader from '../AvatarUploader/AvatarUploader.jsx';
 
-function ProfileForm({ first_name, last_name, username, bio, id, avatar }) {
-  const [error, setError] = useState({});
+function ProfileForm() {
+  const dispatch = useDispatch();
+  const {
+    status,
+    error: fetchError,
+    details,
+  } = useSelector(selectUserInfoData);
+
+  const accessToken = useAuthErrorRedirect(fetchError);
+
+  useLayoutEffect(() => {
+    dispatch(fetchUserInfo({ accessToken }));
+  }, [accessToken, dispatch]);
+
   const [formValues, setFormValues] = useState({
     first_name: '',
     last_name: '',
@@ -17,20 +36,18 @@ function ProfileForm({ first_name, last_name, username, bio, id, avatar }) {
     avatar: '',
   });
 
-  const [isSaved, setIsSaved] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [previewAvatar, setPreviewAvatar] = useState(avatar || '');
+  const [previewAvatar, setPreviewAvatar] = useState(details?.avatar || '');
 
   useEffect(() => {
     setFormValues({
-      first_name: first_name || '',
-      last_name: last_name || '',
-      username: username || '',
-      bio: bio || '',
-      avatar: avatar || '',
+      first_name: details?.first_name || '',
+      last_name: details?.last_name || '',
+      username: details?.username || '',
+      bio: details?.bio || '',
+      avatar: details?.avatar || '',
     });
-    setPreviewAvatar(avatar || '');
-  }, [first_name, last_name, username, bio, avatar]);
+    setPreviewAvatar(details?.avatar || '');
+  }, [details]);
 
   const { errors, validateValues, clearFieldError, clearErrors } =
     useFormValidation(formValues, validateProfileForm);
@@ -54,33 +71,18 @@ function ProfileForm({ first_name, last_name, username, bio, id, avatar }) {
       }));
     }
 
-    setError((prevErrors) => ({ ...prevErrors, [name]: '' }));
     clearFieldError(name);
   };
 
   const handleReset = () => {
     setFormValues({ first_name: '', last_name: '', username: '', bio: '' });
-    setPreviewAvatar(avatar || '');
+    setPreviewAvatar('');
     clearErrors();
-    setError({});
-    setIsSaved(false);
+    clearError();
   };
 
   const handleChangeUserDetails = async (data) => {
-    setLoading(true);
-
-    try {
-      await updateUser({ id, ...data });
-      setError({});
-    } catch (error) {
-      if (error.response && error.response.data) {
-        setError(error.response.data);
-      } else {
-        setError({ general: 'Ошибка. Попробуйте снова.' });
-      }
-    } finally {
-      setLoading(false);
-    }
+    await dispatch(fetchUserUpdate({ id: details.id, ...data, accessToken }));
   };
 
   const handleSubmit = async (e) => {
@@ -90,56 +92,58 @@ function ProfileForm({ first_name, last_name, username, bio, id, avatar }) {
 
     await handleChangeUserDetails(formValues);
 
-    setIsSaved(true);
+    if (!fetchError) {
+      toast('Данные успешно сохранены');
+    }
   };
 
   return (
-    <form noValidate className={styles.form} onSubmit={handleSubmit}>
-      <FormInput
-        label='Имя*'
-        name='first_name'
-        value={formValues.first_name}
-        onChange={handleChange}
-        error={errors.first_name || error.first_name?.[0]}
-      />
-      <FormInput
-        label='Фамилия*'
-        name='last_name'
-        value={formValues.last_name}
-        onChange={handleChange}
-        error={errors.last_name || error.last_name?.[0]}
-      />
-      <FormInput
-        label='username*'
-        name='username'
-        value={formValues.username}
-        onChange={handleChange}
-        error={errors.username || error.username?.[0]}
-      />
-      <FormInput
-        as='textarea'
-        label='bio'
-        name='bio'
-        value={formValues.bio}
-        onChange={handleChange}
-        error={errors.bio || error.bio?.[0]}
-      />
-      <img className={styles.avatar} src={previewAvatar} alt='avatar' />
-      <FormInput
-        as='input'
-        type='file'
-        label='Загрузите аватарку:'
-        name='avatar'
-        onChange={handleChange}
-        error={error.avatar?.[0]}
-        accept='image/*'
-      />
-      <div className={styles.buttons}>
-        <Button text='Очистить' onClick={handleReset} type='reset' />
-        <Button isLoading={loading} text='Сохранить' type='submit' />
-      </div>
-      {isSaved && <p className={styles.successMessage}>Сохранено успешно!</p>}
-    </form>
+    <>
+      <form noValidate className={styles.form} onSubmit={handleSubmit}>
+        <AvatarUploader
+          error={fetchError?.avatar?.[0]}
+          avatarUrl={previewAvatar}
+          handleChange={handleChange}
+        />
+        <FormInput
+          label='Имя*'
+          name='first_name'
+          value={formValues.first_name}
+          onChange={handleChange}
+          error={errors.first_name || fetchError?.first_name?.[0]}
+        />
+        <FormInput
+          label='Фамилия*'
+          name='last_name'
+          value={formValues.last_name}
+          onChange={handleChange}
+          error={errors.last_name || fetchError?.last_name?.[0]}
+        />
+        <FormInput
+          label='username*'
+          name='username'
+          value={formValues.username}
+          onChange={handleChange}
+          error={errors.username || fetchError?.username?.[0]}
+        />
+        <FormInput
+          as='textarea'
+          label='bio'
+          name='bio'
+          value={formValues.bio}
+          onChange={handleChange}
+          error={errors.bio || fetchError?.bio?.[0]}
+        />
+        <div className={styles.buttons}>
+          <Button text='Очистить' onClick={handleReset} type='reset' />
+          <Button
+            isLoading={status === REQUEST_STATUS.LOADING}
+            text='Сохранить'
+            type='submit'
+          />
+        </div>
+      </form>
+    </>
   );
 }
 

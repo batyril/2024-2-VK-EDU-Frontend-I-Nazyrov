@@ -1,8 +1,8 @@
 import * as styles from './Header.module.scss';
 import Menu from '@mui/icons-material/Menu';
-import Search from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 import PAGES from '../../const/pages.js';
+import Search from '@mui/icons-material/Search';
 
 function Header({ text }) {
   return (

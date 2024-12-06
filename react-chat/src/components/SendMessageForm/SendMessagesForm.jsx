@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import * as styles from './SendMessagesForm.module.scss';
-import sendMessage from '../../api/messages/sendMessage.js';
 import useGeolocation from '../../hooks/useGeolocation.js';
 
 import SendIcon from '@mui/icons-material/Send';
@@ -10,8 +9,16 @@ import useAudioRecorder from '../../hooks/useAudioRecorder.js';
 import RecordingControls from '../RecordingControls/index.js';
 import ModalFiles from '../ModalFiles/index.js';
 import AttachDropdown from '../AttachDropdown/index.js';
+import { messageService } from '../../api/messages/index.js';
 
-function SendMessagesForm({ chatId, files, setFiles, deleteFile }) {
+function SendMessagesForm({
+  chatId,
+  files,
+  setFiles,
+  deleteFile,
+  accessToken,
+}) {
+  const { sendMessage } = messageService();
   const [inputText, setInputText] = useState('');
   const [isSending, setIsSending] = useState(false);
   const inputRef = useRef(null);
@@ -28,7 +35,7 @@ function SendMessagesForm({ chatId, files, setFiles, deleteFile }) {
 
   const handleSubmit = async (
     e,
-    { voice = null, location = null, files = null } = {},
+    { voice = null, location = null, files = null, fileText = null } = {},
   ) => {
     if (e) e.preventDefault();
     if (isSending) return;
@@ -45,7 +52,7 @@ function SendMessagesForm({ chatId, files, setFiles, deleteFile }) {
         newMessage = { text: location, chatId };
         break;
       case files !== null:
-        newMessage = { chatId, files };
+        newMessage = { chatId, files, text: fileText };
         break;
       default:
         if (!trimmedInputText) {
@@ -56,7 +63,7 @@ function SendMessagesForm({ chatId, files, setFiles, deleteFile }) {
     }
 
     try {
-      await sendMessage(newMessage);
+      await sendMessage({ ...newMessage, accessToken });
       setInputText('');
       setFiles([]);
       fileInputRef.current.value = '';

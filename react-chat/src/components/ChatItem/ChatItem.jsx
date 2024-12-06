@@ -3,9 +3,10 @@ import DoneAll from '@mui/icons-material/DoneAll';
 import formatTime from '../../helpers/FormatTime.js';
 import { Link } from 'react-router-dom';
 import createAvatar from '../../helpers/createAvatar.js';
+import { memo } from 'react';
 
 function ChatItem({ name, userId, img, last_message }) {
-  let message = last_message.text;
+  let message = last_message?.text || '';
 
   if (last_message) {
     if (last_message.voice) {
@@ -45,4 +46,4 @@ function ChatItem({ name, userId, img, last_message }) {
   );
 }
 
-export default ChatItem;
+export default memo(ChatItem);

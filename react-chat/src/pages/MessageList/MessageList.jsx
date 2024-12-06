@@ -1,115 +1,95 @@
-import SendMessagesForm from '../../components/SendMessageForm';
 import * as styles from './MessageList.module.scss';
 import Header from '../../components/Header/MessageList.jsx';
 import MessagesItem from '../../components/MessageItem/index.js';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import getMessages from '../../api/messages/getMessages.js';
-import getChatById from '../../api/chat/getChatById.js';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import useCentrifuge from '../../hooks/useCentrifuge.js';
-import getCurrentUser from '../../api/user/getCurrentUser.js';
 import createAvatar from '../../helpers/createAvatar.js';
 import Spinner from '../../components/Spinner/index.js';
 import { Player } from '@lottiefiles/react-lottie-player';
 import animate from '../../animation/message.json';
-import PAGES from '../../const/pages.js';
 import { useInView } from 'react-intersection-observer';
-
 import { useRef } from 'react';
 import useDragAndDrop from '../../hooks/useDragAndDrop.js';
+import { useDispatch, useSelector } from 'react-redux';
+import selectMessage from '../../store/message/selectors.js';
+import REQUEST_STATUS from '../../const/request.js';
+import fetchMessage from '../../store/message/thunk.js';
+import { incrementPage, resetMessage } from '../../store/message/slice.js';
+import { selectChatDetails } from '../../store/chatDetails/selectors.js';
+import getChatDetails from '../../store/chatDetails/thunk.js';
+import { fetchUserInfo } from '../../store/user/thunk.js';
+import selectUserInfoData from '../../store/user/selectors.js';
+import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
+import SendMessagesForm from '../../components/SendMessageForm/index.js';
 
 function MessageList() {
-  const navigate = useNavigate();
+  const {
+    status: messageStatus,
+    messages,
+    error: messageError,
+    page,
+    hasMore,
+    count,
+  } = useSelector(selectMessage);
+  const {
+    status: userInfoStatus,
+    error: userInfoError,
+    details: userInfo,
+  } = useSelector(selectUserInfoData);
+  const {
+    status: chatStatus,
+    error: chatError,
+    items: chatDetails,
+  } = useSelector(selectChatDetails);
+
+  const isError = chatError || userInfoError || messageError;
+
+  const isLoading =
+    messageStatus === REQUEST_STATUS.LOADING ||
+    chatStatus === REQUEST_STATUS.LOADING ||
+    userInfoStatus === REQUEST_STATUS.LOADING;
+  const dispatch = useDispatch();
   const { chatId } = useParams();
-  const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [chatInfo, setChatInfo] = useState(null);
-  const [userDetail, setUserDetail] = useState(null);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
 
   const messageListRef = useRef(null); // Реф для контейнера с сообщениями
   const scrollPosition = useRef(0); // Реф для хранения позиции в процентах
+
+  const accessToken = useAuthErrorRedirect(isError);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetMessage());
+    };
+  }, [dispatch]);
+
+  useCentrifuge(chatId, accessToken);
+
   const { ref, inView } = useInView({
     threshold: 0.5,
   });
 
-  useCentrifuge(chatId, setMessages);
-
-  const fetchAllData = async (currentPage) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const [messagesData, userData, chatData] = await Promise.all([
-        getMessages({ chatId, pageSize: 10, page: currentPage }),
-        getCurrentUser(),
-        getChatById(chatId),
-      ]);
-
-      setMessages((prevMessages) => [
-        ...messagesData.results.reverse(),
-        ...prevMessages,
-      ]);
-      setUserDetail(userData);
-      setChatInfo(chatData);
-
-      if (!messagesData.next) {
-        setHasMore(false);
-      }
-    } catch (err) {
-      if (err.message === 'Access token not found') {
-        navigate(PAGES.AUTH);
-      }
-      setError(err.message);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (page > 1 && !isLoading) {
+      messageListRef.current.scrollTop = scrollPosition.current;
     }
-  };
-
-  useLayoutEffect(() => {
-    fetchAllData(page);
-  }, [page]);
+  }, [isLoading, page]);
 
   useEffect(() => {
-    if (inView && hasMore) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  }, [inView, hasMore]);
+    dispatch(fetchMessage({ chatId, page, accessToken, page_size: 20 }));
+  }, [accessToken, chatId, dispatch, page]);
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (messageListRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } =
-          messageListRef.current;
-        scrollPosition.current =
-          (scrollTop / (scrollHeight - clientHeight)) * 100;
-      }
-    };
-
-    handleBeforeUnload();
-    return () => handleBeforeUnload();
-  }, [page]);
+    dispatch(getChatDetails({ chatId, accessToken }));
+    dispatch(fetchUserInfo({ accessToken }));
+  }, [accessToken, chatId, dispatch, page]);
 
   useEffect(() => {
-    if (!loading && messages.length > 0) {
-      const { scrollHeight, clientHeight } = messageListRef.current;
-
-      if (scrollPosition.current === 0) {
-        messageListRef.current.scrollTop = scrollHeight - clientHeight;
-      } else {
-        const savedScrollPosition = scrollPosition.current / 100;
-        const targetScroll =
-          (scrollHeight - clientHeight) * (savedScrollPosition + 0.2);
-
-        messageListRef.current.scrollTop = Math.min(
-          targetScroll,
-          scrollHeight - clientHeight,
-        );
-      }
+    if (inView && hasMore && !isLoading) {
+      scrollPosition.current = messageListRef.current.scrollTop;
+      dispatch(incrementPage());
     }
-  }, [messages, loading]);
+  }, [inView, hasMore, isLoading, dispatch]);
 
   const {
     isDragging,
@@ -124,8 +104,8 @@ function MessageList() {
   return (
     <>
       <Header
-        name={chatInfo?.title}
-        img={chatInfo?.avatar ? chatInfo?.avatar : createAvatar(name)}
+        name={chatDetails?.title}
+        img={chatDetails?.avatar ? chatDetails?.avatar : createAvatar(name)}
       />
       <main
         onDragOver={handleDragOver}
@@ -133,44 +113,47 @@ function MessageList() {
         onDrop={handleDrop}
         className={styles.chat}
       >
-        <div ref={messageListRef} className={styles.message__list}>
-          {loading && <Spinner />}
-          {error && <p className={styles.message__error}>Ошибка: {error}</p>}
+        <div id='list' ref={messageListRef} className={styles.message__list}>
+          {isLoading && page === 1 && messages.length === 0 && <Spinner />}
+          {isError && (
+            <p className={styles.message__error}>Ошибка: {isError}</p>
+          )}
 
-          {!loading &&
-            !error &&
-            (messages.length > 0 ? (
-              messages.map(
-                ({ sender, text, created_at, id, voice, files }, index) => (
-                  <MessagesItem
-                    voice={voice}
-                    ref={index === 0 ? ref : null}
-                    isSender={sender?.id === userDetail?.id}
-                    name={sender.username}
-                    key={id}
-                    text={text}
-                    time={created_at}
-                    files={files}
-                  />
-                ),
-              )
-            ) : (
-              <div className={styles.message__empty}>
-                <Player
-                  autoplay
-                  loop
-                  src={animate}
-                  style={{ height: '200px', width: '200px' }}
+          {messages.length > 0 &&
+            messages.map((message, index) => {
+              const lasView = index === messages.length - 10 ? ref : null;
+              return (
+                <MessagesItem
+                  voice={message.voice}
+                  ref={lasView}
+                  isSender={message.sender?.id === userInfo?.id}
+                  name={message.sender.username}
+                  key={message.id}
+                  text={message.text}
+                  time={message.created_at}
+                  files={message.files}
                 />
-                Здесь пока нет сообщений. Начните общение!
-              </div>
-            ))}
+              );
+            })}
+
+          {count === 0 && !isLoading && (
+            <div className={styles.message__empty}>
+              <Player
+                autoplay
+                loop
+                src={animate}
+                style={{ height: '200px', width: '200px' }}
+              />
+              Здесь пока нет сообщений. Начните общение!
+            </div>
+          )}
         </div>
         <SendMessagesForm
           deleteFile={deleteFile}
           setFiles={setFiles}
           files={files}
           chatId={chatId}
+          accessToken={accessToken}
         />
         {isDragging && (
           <div className={styles.dropArea}>

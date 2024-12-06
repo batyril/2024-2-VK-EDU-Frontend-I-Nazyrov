@@ -1,4 +1,3 @@
-//TODO: переделать на ENUM
 const EVENT_CENTRIFUGO = {
   CREATE: 'create',
   UPDATE: 'update',

@@ -1,16 +1,16 @@
 import * as styles from './ContactItem.module.scss';
 import { memo, useState } from 'react';
-import createChat from '../../api/chat/createChat.js';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../Spinner/index.js';
 import createAvatar from '../../helpers/createAvatar.js';
 import { toast } from 'react-toastify';
+import chatService from '../../api/chat/index.js';
 
 const ContactItem = memo(({ name, id, img }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const { createChat } = chatService();
   const fetchChatInfo = async () => {
     setLoading(true);
     try {
