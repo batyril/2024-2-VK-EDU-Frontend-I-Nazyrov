@@ -11,6 +11,13 @@ export const userService = () => {
     return response.data;
   };
 
+  const updateOldToken = async ({ refresh_token }) => {
+    const response = await axios.post(createUrl(ENDPOINTS.REFRESH), {
+      refresh: refresh_token,
+    });
+    return response.data;
+  };
+
   const getAllUsers = async ({ page = 1, page_size = 10, search = '' }) => {
     const response = await axios.get(createUrl(ENDPOINTS.USERS), {
       params: {
@@ -86,5 +93,12 @@ export const userService = () => {
     return response.data;
   };
 
-  return { authUser, getAllUsers, getCurrentUser, registerUser, updateUser };
+  return {
+    authUser,
+    getAllUsers,
+    getCurrentUser,
+    registerUser,
+    updateUser,
+    updateOldToken,
+  };
 };

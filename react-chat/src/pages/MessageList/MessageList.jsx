@@ -20,7 +20,6 @@ import { selectChatDetails } from '../../store/chatDetails/selectors.js';
 import getChatDetails from '../../store/chatDetails/thunk.js';
 import { fetchUserInfo } from '../../store/user/thunk.js';
 import selectUserInfoData from '../../store/user/selectors.js';
-import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
 import SendMessagesForm from '../../components/SendMessageForm/index.js';
 
 function MessageList() {
@@ -54,8 +53,6 @@ function MessageList() {
 
   const messageListRef = useRef(null); // Реф для контейнера с сообщениями
   const scrollPosition = useRef(0); // Реф для хранения позиции в процентах
-
-  useAuthErrorRedirect(isError);
 
   useEffect(() => {
     return () => {

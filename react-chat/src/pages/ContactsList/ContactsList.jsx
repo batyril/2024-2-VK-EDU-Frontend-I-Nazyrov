@@ -10,7 +10,6 @@ import { fetchContacts } from '../../store/contacts/thunk.js';
 
 import REQUEST_STATUS from '../../const/request.js';
 import { incrementPage, resetContacts } from '../../store/contacts/slice.js';
-import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
 
 function ContactsList() {
   const { status, items, error, page, hasMore } =
@@ -24,8 +23,6 @@ function ContactsList() {
       dispatch(resetContacts());
     };
   }, [dispatch]);
-
-  useAuthErrorRedirect(error);
 
   useEffect(() => {
     if (page > 1) {

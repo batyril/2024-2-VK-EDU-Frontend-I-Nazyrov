@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserInfo, fetchUserUpdate } from '../../store/user/thunk.js';
 import { toast } from 'react-toastify';
 import selectUserInfoData from '../../store/user/selectors.js';
-import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
 import AvatarUploader from '../AvatarUploader/AvatarUploader.jsx';
 import REQUEST_STATUS from '../../const/request.js';
 
@@ -21,8 +20,6 @@ function ProfileForm() {
     details,
   } = useSelector(selectUserInfoData);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useAuthErrorRedirect(fetchError);
 
   useLayoutEffect(() => {
     dispatch(fetchUserInfo());

@@ -1,4 +1,4 @@
-import Router from '../../router.jsx';
+import Router from '../../route/router.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 //TODO: сделать декстоп версию

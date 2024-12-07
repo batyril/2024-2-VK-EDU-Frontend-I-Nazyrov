@@ -14,14 +14,13 @@ import { incrementPage, resetChats } from '../../store/chat/slice.js';
 import selectChatData from '../../store/chat/selectors.js';
 import REQUEST_STATUS from '../../const/request.js';
 import fetchChat from '../../store/chat/thunk.js';
-import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
 
 function ChatList() {
   const { status, items, error, page, hasMore } = useSelector(selectChatData);
   const dispatch = useDispatch();
   const containerRef = useRef(null);
   const scrollPositionRef = useRef(0);
-  useAuthErrorRedirect(error);
+
   useEffect(() => {
     return () => {
       dispatch(resetChats());
