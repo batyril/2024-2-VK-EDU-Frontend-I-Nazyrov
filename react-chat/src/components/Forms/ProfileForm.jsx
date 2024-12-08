@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import selectUserInfoData from '../../store/user/selectors.js';
 import AvatarUploader from '../AvatarUploader/AvatarUploader.jsx';
 import REQUEST_STATUS from '../../const/request.js';
+import useAuthErrorHandler from '../../hooks/useAuthErrorHandler.js';
 
 function ProfileForm() {
   const dispatch = useDispatch();
@@ -20,6 +21,8 @@ function ProfileForm() {
     details,
   } = useSelector(selectUserInfoData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useAuthErrorHandler(fetchError);
 
   useLayoutEffect(() => {
     dispatch(fetchUserInfo());

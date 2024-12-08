@@ -21,6 +21,7 @@ import getChatDetails from '../../store/chatDetails/thunk.js';
 import { fetchUserInfo } from '../../store/user/thunk.js';
 import selectUserInfoData from '../../store/user/selectors.js';
 import SendMessagesForm from '../../components/SendMessageForm/index.js';
+import useAuthErrorHandler from '../../hooks/useAuthErrorHandler.js';
 
 function MessageList() {
   const {
@@ -43,6 +44,8 @@ function MessageList() {
   } = useSelector(selectChatDetails);
 
   const isError = chatError || userInfoError || messageError;
+
+  useAuthErrorHandler(isError);
 
   const isLoading =
     messageStatus === REQUEST_STATUS.LOADING ||

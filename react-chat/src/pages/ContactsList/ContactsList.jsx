@@ -10,6 +10,7 @@ import { fetchContacts } from '../../store/contacts/thunk.js';
 
 import REQUEST_STATUS from '../../const/request.js';
 import { incrementPage, resetContacts } from '../../store/contacts/slice.js';
+import useAuthErrorHandler from '../../hooks/useAuthErrorHandler.js';
 
 function ContactsList() {
   const { status, items, error, page, hasMore } =
@@ -17,6 +18,8 @@ function ContactsList() {
   const dispatch = useDispatch();
   const containerRef = useRef(null);
   const scrollPositionRef = useRef(0);
+
+  useAuthErrorHandler(error);
 
   useEffect(() => {
     return () => {
