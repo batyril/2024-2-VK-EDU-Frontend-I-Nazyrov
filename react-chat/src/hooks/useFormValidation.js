@@ -16,11 +16,7 @@ function useFormValidation(initialValues, validate) {
     }));
   };
 
-  const clearErrors = () => {
-    setErrors({});
-  };
-
-  return { errors, validateValues, clearFieldError, clearErrors };
+  return { errors, validateValues, clearFieldError };
 }
 
 export default useFormValidation;

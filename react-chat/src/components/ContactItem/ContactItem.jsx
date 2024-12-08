@@ -31,7 +31,7 @@ const ContactItem = memo(({ name, id, img }) => {
       }
 
       if (err.response.data.members[0] === "Can't append current user") {
-        toast(
+        toast.error(
           'Невозможно начать чат с самим собой. Попробуйте выбрать другого пользователя',
         );
         return;

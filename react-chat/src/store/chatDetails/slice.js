@@ -24,7 +24,6 @@ export const chatDetailsSlice = createSlice({
       })
       .addCase(getChatDetails.fulfilled, (state, action) => {
         state.status = REQUEST_STATUS.SUCCESS;
-        console.log(action.payload);
         state.items = action.payload;
 
         state.hasMore = action.payload.next !== null;

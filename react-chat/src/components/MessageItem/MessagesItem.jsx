@@ -5,7 +5,7 @@ import { forwardRef, memo } from 'react';
 import DoneAll from '@mui/icons-material/DoneAll';
 
 const MessagesItem = forwardRef(function MessagesItem(
-  { name, text, time, isSender, voice, files },
+  { name, text, time, isSender, voice, files, isPrivate },
   ref,
 ) {
   return (
@@ -16,6 +16,7 @@ const MessagesItem = forwardRef(function MessagesItem(
         isSender ? styles.message__blockMe : styles.message__blockOther,
       )}
     >
+      {!isPrivate && <p className={styles.message__name}>{name}</p>}
       {voice && (
         <audio controls className={styles.message__audio}>
           <source src={voice} type='audio/wav' />
@@ -46,7 +47,6 @@ const MessagesItem = forwardRef(function MessagesItem(
       <div
         className={clsx(styles.message__wrapper, files && styles.file__wrapper)}
       >
-        {/*<p className={styles.message__name}>{name}</p>*/}
         <p className={styles.message__text}>{text}</p>
         <div className={styles.message__status}>
           <p className={styles.message__time}>{formatTime(time)}</p> <DoneAll />

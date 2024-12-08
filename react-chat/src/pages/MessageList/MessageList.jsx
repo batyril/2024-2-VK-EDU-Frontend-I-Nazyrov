@@ -20,8 +20,8 @@ import { selectChatDetails } from '../../store/chatDetails/selectors.js';
 import getChatDetails from '../../store/chatDetails/thunk.js';
 import { fetchUserInfo } from '../../store/user/thunk.js';
 import selectUserInfoData from '../../store/user/selectors.js';
-import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
 import SendMessagesForm from '../../components/SendMessageForm/index.js';
+import useAuthErrorHandler from '../../hooks/useAuthErrorHandler.js';
 
 function MessageList() {
   const {
@@ -45,6 +45,8 @@ function MessageList() {
 
   const isError = chatError || userInfoError || messageError;
 
+  useAuthErrorHandler(isError);
+
   const isLoading =
     messageStatus === REQUEST_STATUS.LOADING ||
     chatStatus === REQUEST_STATUS.LOADING ||
@@ -55,15 +57,13 @@ function MessageList() {
   const messageListRef = useRef(null); // Реф для контейнера с сообщениями
   const scrollPosition = useRef(0); // Реф для хранения позиции в процентах
 
-  const accessToken = useAuthErrorRedirect(isError);
-
   useEffect(() => {
     return () => {
       dispatch(resetMessage());
     };
   }, [dispatch]);
 
-  useCentrifuge(chatId, accessToken);
+  useCentrifuge(chatId);
 
   const { ref, inView } = useInView({
     threshold: 0.5,
@@ -76,13 +76,13 @@ function MessageList() {
   }, [isLoading, page]);
 
   useEffect(() => {
-    dispatch(fetchMessage({ chatId, page, accessToken, page_size: 20 }));
-  }, [accessToken, chatId, dispatch, page]);
+    dispatch(fetchMessage({ chatId, page, page_size: 20 }));
+  }, [chatId, dispatch, page]);
 
   useEffect(() => {
-    dispatch(getChatDetails({ chatId, accessToken }));
-    dispatch(fetchUserInfo({ accessToken }));
-  }, [accessToken, chatId, dispatch, page]);
+    dispatch(getChatDetails({ chatId }));
+    dispatch(fetchUserInfo());
+  }, [chatId, dispatch, page]);
 
   useEffect(() => {
     if (inView && hasMore && !isLoading) {
@@ -118,12 +118,12 @@ function MessageList() {
           {isError && (
             <p className={styles.message__error}>Ошибка: {isError}</p>
           )}
-
           {messages.length > 0 &&
             messages.map((message, index) => {
               const lasView = index === messages.length - 10 ? ref : null;
               return (
                 <MessagesItem
+                  isPrivate={chatDetails?.is_private}
                   voice={message.voice}
                   ref={lasView}
                   isSender={message.sender?.id === userInfo?.id}
@@ -135,7 +135,6 @@ function MessageList() {
                 />
               );
             })}
-
           {count === 0 && !isLoading && (
             <div className={styles.message__empty}>
               <Player
@@ -153,7 +152,6 @@ function MessageList() {
           setFiles={setFiles}
           files={files}
           chatId={chatId}
-          accessToken={accessToken}
         />
         {isDragging && (
           <div className={styles.dropArea}>

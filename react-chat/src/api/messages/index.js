@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { createUrl, ENDPOINTS } from '../../const/apiUrls.js';
-import getHeaders from '../../helpers/getHeaders.js';
+import axios from '../axiosConfig.js';
+import getAccessToken from '../../helpers/getAccessToken.js';
 
 export const messageService = () => {
   const getMessages = async ({
@@ -8,16 +8,15 @@ export const messageService = () => {
     search = '',
     page = 1,
     pageSize = 10,
-    accessToken,
   }) => {
     const response = await axios.get(createUrl(ENDPOINTS.MESSAGES), {
-      headers: getHeaders('application/json', accessToken),
       params: {
         chat: chatId,
         search: search,
         page: page,
         page_size: pageSize,
       },
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
     });
 
     return response.data;
@@ -28,7 +27,6 @@ export const messageService = () => {
     text = '',
     voice = null,
     files = [],
-    accessToken,
   }) => {
     const formData = new FormData();
     formData.append('chat', chatId);
@@ -41,7 +39,10 @@ export const messageService = () => {
     }
 
     const response = await axios.post(createUrl(ENDPOINTS.MESSAGES), formData, {
-      headers: getHeaders('multipart/form-data', accessToken),
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
     });
 
     return response.data;

@@ -3,9 +3,9 @@ import { userService } from '../../api/userService/index.js';
 
 export const fetchUserInfo = createAsyncThunk(
   'user/fetchUserInfo',
-  async ({ accessToken }) => {
+  async () => {
     const { getCurrentUser } = userService();
-    return await getCurrentUser({ accessToken });
+    return await getCurrentUser();
   },
 );
 
@@ -16,10 +16,10 @@ export const fetchUserUpdate = createAsyncThunk(
     try {
       return await updateUser({ ...body });
     } catch (error) {
-      console.log(error);
       if (error.response && error.response.data) {
         return rejectWithValue(error.response.data);
       }
+      return rejectWithValue(error);
     }
   },
 );

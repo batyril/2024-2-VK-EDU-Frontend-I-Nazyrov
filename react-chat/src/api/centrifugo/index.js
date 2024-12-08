@@ -1,26 +1,22 @@
-import axios from 'axios';
+import axios from '../axiosConfig.js';
 import { createUrl, ENDPOINTS } from '../../const/apiUrls.js';
-import getHeaders from '../../helpers/getHeaders.js';
+import getAccessToken from '../../helpers/getAccessToken.js';
 
 const centrifugoService = () => {
-  const getSubscribeToken = async (userId, accessToken) => {
+  const getSubscribeToken = async (userId) => {
     const response = await axios.post(
       createUrl(ENDPOINTS.CENTRIFUGO_SUBSCRIBE),
       { userId },
-      {
-        headers: getHeaders('application/json', accessToken),
-      },
+      { headers: { Authorization: `Bearer ${getAccessToken()}` } },
     );
     return response.data.token;
   };
 
-  const getToken = async (accessToken) => {
+  const getToken = async () => {
     const response = await axios.post(
       createUrl(ENDPOINTS.CENTRIFUGO_CONNECT),
       {},
-      {
-        headers: getHeaders('application/json', accessToken),
-      },
+      { headers: { Authorization: `Bearer ${getAccessToken()}` } },
     );
     return response.data.token;
   };
