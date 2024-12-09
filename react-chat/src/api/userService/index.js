@@ -1,45 +1,40 @@
-import axios from 'axios';
+import axios from '../axiosConfig.js';
 import { createUrl, ENDPOINTS } from '../../const/apiUrls.js';
-import getHeaders from '../../helpers/getHeaders.js';
+import getAccessToken from '../../helpers/getAccessToken.js';
 
 export const userService = () => {
   const authUser = async ({ username, password }) => {
-    const response = await axios.post(
-      createUrl(ENDPOINTS.AUTH),
-      {
-        username,
-        password,
-      },
-      {
-        headers: getHeaders(),
-      },
-    );
+    const response = await axios.post(createUrl(ENDPOINTS.AUTH), {
+      username,
+      password,
+    });
     return response.data;
   };
 
-  const getAllUsers = async ({
-    page = 1,
-    page_size = 10,
-    search = '',
-    accessToken,
-  }) => {
+  const updateOldToken = async ({ refresh_token }) => {
+    const response = await axios.post(createUrl(ENDPOINTS.REFRESH), {
+      refresh: refresh_token,
+    });
+    return response.data;
+  };
+
+  const getAllUsers = async ({ page = 1, page_size = 10, search = '' }) => {
     const response = await axios.get(createUrl(ENDPOINTS.USERS), {
-      headers: getHeaders('application/json', accessToken),
       params: {
         page,
         page_size,
         search,
       },
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
     });
 
     return response.data;
   };
 
-  const getCurrentUser = async ({ accessToken }) => {
+  const getCurrentUser = async () => {
     const response = await axios.get(createUrl(ENDPOINTS.CURRENT_USER), {
-      headers: getHeaders('application/json', accessToken),
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
     });
-
     return response.data;
   };
 
@@ -60,7 +55,9 @@ export const userService = () => {
     formData.append('avatar', avatar);
 
     const response = await axios.post(createUrl(ENDPOINTS.REGISTER), formData, {
-      headers: getHeaders('application/json'),
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
     return response.data;
   };
@@ -72,7 +69,6 @@ export const userService = () => {
     last_name,
     id,
     avatar,
-    accessToken,
   }) => {
     const formData = new FormData();
     formData.append('username', username);
@@ -88,11 +84,21 @@ export const userService = () => {
       createUrl(ENDPOINTS.USER(id)),
       formData,
       {
-        headers: getHeaders('multipart/form-data', accessToken),
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
       },
     );
     return response.data;
   };
 
-  return { authUser, getAllUsers, getCurrentUser, registerUser, updateUser };
+  return {
+    authUser,
+    getAllUsers,
+    getCurrentUser,
+    registerUser,
+    updateUser,
+    updateOldToken,
+  };
 };

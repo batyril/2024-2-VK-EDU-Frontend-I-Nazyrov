@@ -10,7 +10,7 @@ import { fetchContacts } from '../../store/contacts/thunk.js';
 
 import REQUEST_STATUS from '../../const/request.js';
 import { incrementPage, resetContacts } from '../../store/contacts/slice.js';
-import useAuthErrorRedirect from '../../hooks/useAuthErrorRedirect.js';
+import useAuthErrorHandler from '../../hooks/useAuthErrorHandler.js';
 
 function ContactsList() {
   const { status, items, error, page, hasMore } =
@@ -19,20 +19,20 @@ function ContactsList() {
   const containerRef = useRef(null);
   const scrollPositionRef = useRef(0);
 
+  useAuthErrorHandler(error);
+
   useEffect(() => {
     return () => {
       dispatch(resetContacts());
     };
   }, [dispatch]);
 
-  const accessToken = useAuthErrorRedirect(error);
-
   useEffect(() => {
     if (page > 1) {
       scrollPositionRef.current = containerRef.current.scrollTop;
     }
-    dispatch(fetchContacts({ page, accessToken }));
-  }, [page]);
+    dispatch(fetchContacts({ page }));
+  }, [dispatch, page]);
 
   useEffect(() => {
     if (page > 1) {

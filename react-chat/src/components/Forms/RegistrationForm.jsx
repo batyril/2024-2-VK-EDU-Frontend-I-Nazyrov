@@ -24,8 +24,10 @@ function RegistrationForm() {
   });
   const [previewAvatar, setPreviewAvatar] = useState('');
   const [error, setError] = useState({});
-  const { errors, validateValues, clearFieldError, clearErrors } =
-    useFormValidation(formValues, validateProfileForm);
+  const { errors, validateValues, clearFieldError } = useFormValidation(
+    formValues,
+    validateProfileForm,
+  );
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -45,20 +47,6 @@ function RegistrationForm() {
     }
     clearFieldError(name);
     setError((prevErrors) => ({ ...prevErrors, [name]: '' }));
-  };
-
-  const handleReset = () => {
-    setFormValues({
-      first_name: '',
-      last_name: '',
-      username: '',
-      password: '',
-      bio: '',
-      avatar: '',
-    });
-    clearErrors();
-    setError({});
-    setPreviewAvatar('');
   };
 
   const handleRegisterUser = async () => {
@@ -131,7 +119,6 @@ function RegistrationForm() {
         error={errors.bio || error.bio?.[0]}
       />
       <div className={styles.buttons}>
-        <Button text='Очистить' onClick={handleReset} type='reset' />
         <Button isLoading={loading} text='Сохранить' type='submit' />
       </div>
     </form>

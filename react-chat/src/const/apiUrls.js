@@ -1,6 +1,7 @@
 export const ENDPOINTS = {
   REGISTER: '/api/register/',
   AUTH: '/api/auth/',
+  REFRESH: '/api/auth/refresh/',
   CURRENT_USER: '/api/user/current/',
   USERS: '/api/users/',
   USER: (id) => `/api/user/${id}`,

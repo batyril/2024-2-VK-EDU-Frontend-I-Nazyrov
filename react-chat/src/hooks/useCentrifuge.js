@@ -12,7 +12,7 @@ import {
   updateMessage,
 } from '../store/message/slice.js';
 
-const useCentrifuge = (chatId, accessToken) => {
+const useCentrifuge = (chatId) => {
   const dispatch = useDispatch();
   const { getCurrentUser } = userService();
   const { getToken, getSubscribeToken } = centrifugoService();
@@ -22,12 +22,9 @@ const useCentrifuge = (chatId, accessToken) => {
 
     const initializeCentrifuge = async () => {
       try {
-        const userData = await getCurrentUser({ accessToken });
-        const connectToken = await getToken(accessToken);
-        const subscribeToken = await getSubscribeToken(
-          userData.id,
-          accessToken,
-        );
+        const userData = await getCurrentUser();
+        const connectToken = await getToken();
+        const subscribeToken = await getSubscribeToken(userData.id);
 
         centrifuge = new Centrifuge(
           'wss://vkedu-fullstack-div2.ru/connection/websocket/',

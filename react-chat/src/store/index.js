@@ -6,18 +6,10 @@ import messageSlice from './message/slice.js';
 import chatDetailsSlice from './chatDetails/slice.js';
 import authSlice from './auth/slice.js';
 
-const localStorageMiddleware = (store) => (next) => (action) => {
-  const result = next(action);
-  const state = store.getState();
-  localStorage.setItem('accessToken', state.auth.accessToken);
-  localStorage.setItem('refreshToken', state.auth.refreshToken);
-  return result;
-};
-
 const persistedState = {
   auth: {
-    accessToken: localStorage.getItem('accessToken') || null,
-    refreshToken: localStorage.getItem('refreshToken') || null,
+    accessToken: localStorage.getItem('accessToken') || '',
+    refreshToken: localStorage.getItem('refreshToken') || '',
   },
 };
 
@@ -31,8 +23,6 @@ const store = configureStore({
     auth: authSlice,
   },
   preloadedState: persistedState,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(localStorageMiddleware),
 });
 
 export default store;
