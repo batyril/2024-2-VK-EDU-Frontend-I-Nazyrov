@@ -2,13 +2,12 @@ import { createUrl, ENDPOINTS } from '../../const/apiUrls.js';
 import axios from '../axiosConfig.js';
 import getAccessToken from '../../helpers/getAccessToken.js';
 export const chatService = () => {
-  const createChat = async ({ members, isPrivate, title, avatar }) => {
+  const createChat = async ({ members, isPrivate }) => {
     const response = await axios.post(
       createUrl(ENDPOINTS.CHATS),
       {
         members: members,
         is_private: isPrivate,
-        // avatar: avatar,
       },
       { headers: { Authorization: `Bearer ${getAccessToken()}` } },
     );

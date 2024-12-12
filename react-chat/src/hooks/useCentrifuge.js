@@ -76,7 +76,7 @@ const useCentrifuge = (chatId) => {
     };
 
     initializeCentrifuge();
-  }, [chatId, dispatch]);
+  }, [chatId, dispatch, getCurrentUser, getSubscribeToken, getToken]);
 };
 
 export default useCentrifuge;
