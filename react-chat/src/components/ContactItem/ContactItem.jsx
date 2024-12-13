@@ -1,16 +1,30 @@
 import * as styles from './ContactItem.module.scss';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../Spinner/index.js';
 import createAvatar from '../../helpers/createAvatar.js';
 import { toast } from 'react-toastify';
 import chatService from '../../api/chat/index.js';
+import { useInView } from 'react-intersection-observer';
 
 const ContactItem = memo(({ name, id, img }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { createChat } = chatService();
+  const [imageSrc, setImageSrc] = useState(null);
+
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  useEffect(() => {
+    if (inView) {
+      setImageSrc(img || createAvatar(name));
+    }
+  }, [inView, img, name]);
+
   const fetchChatInfo = async () => {
     setLoading(true);
     try {
@@ -44,7 +58,7 @@ const ContactItem = memo(({ name, id, img }) => {
   };
 
   return (
-    <div onClick={fetchChatInfo} className={styles.chat__item}>
+    <div ref={ref} onClick={fetchChatInfo} className={styles.chat__item}>
       {loading && (
         <div className={styles.loading}>
           <Spinner />
@@ -53,11 +67,7 @@ const ContactItem = memo(({ name, id, img }) => {
       {error && <div className={styles.error}>{error}</div>}{' '}
       {!loading && !error && (
         <>
-          <img
-            src={img ? img : createAvatar(name)}
-            alt='avatar'
-            className={styles.chat__img}
-          />
+          <img src={imageSrc} alt='avatar' className={styles.chat__img} />
           <div className='chat-item__info'>
             <p className={styles.chat__name}>{name}</p>
           </div>
