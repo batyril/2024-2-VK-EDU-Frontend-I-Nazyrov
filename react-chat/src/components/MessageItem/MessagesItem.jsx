@@ -1,13 +1,27 @@
 import * as styles from './MessagesItem.module.scss';
 import formatTime from '../../helpers/FormatTime.js';
 import clsx from 'clsx';
-import { forwardRef, memo } from 'react';
+import { forwardRef, memo, useState, useEffect } from 'react';
 import DoneAll from '@mui/icons-material/DoneAll';
+import { useInView } from 'react-intersection-observer';
 
 const MessagesItem = forwardRef(function MessagesItem(
   { name, text, time, isSender, voice, files, isPrivate },
   ref,
 ) {
+  const [visibleFiles, setVisibleFiles] = useState([]); // Хранит видимые изображения
+
+  const { ref: inViewRef, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  useEffect(() => {
+    if (inView && files?.length > 0) {
+      setVisibleFiles(files.map((file) => file.item));
+    }
+  }, [inView, files]);
+
   return (
     <div
       ref={ref}
@@ -17,6 +31,7 @@ const MessagesItem = forwardRef(function MessagesItem(
       )}
     >
       {!isPrivate && <p className={styles.message__name}>{name}</p>}
+
       {voice && (
         <audio controls className={styles.message__audio}>
           <source src={voice} type='audio/wav' />
@@ -25,10 +40,10 @@ const MessagesItem = forwardRef(function MessagesItem(
       )}
 
       {files && files.length > 0 && (
-        <div className={styles.message__images}>
+        <div ref={inViewRef} className={styles.message__images}>
           {files.length === 1 ? (
             <img
-              src={files[0].item}
+              src={visibleFiles[0]}
               alt='Message attachment'
               className={styles.message__imageSingle}
             />
@@ -36,7 +51,7 @@ const MessagesItem = forwardRef(function MessagesItem(
             files.map((file, index) => (
               <img
                 key={index}
-                src={file.item}
+                src={visibleFiles[index]}
                 alt='Message attachment'
                 className={styles.message__image}
               />
@@ -44,6 +59,7 @@ const MessagesItem = forwardRef(function MessagesItem(
           )}
         </div>
       )}
+
       <div
         className={clsx(styles.message__wrapper, files && styles.file__wrapper)}
       >

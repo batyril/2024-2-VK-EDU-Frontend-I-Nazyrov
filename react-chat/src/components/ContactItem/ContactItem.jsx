@@ -67,7 +67,13 @@ const ContactItem = memo(({ name, id, img }) => {
       {error && <div className={styles.error}>{error}</div>}{' '}
       {!loading && !error && (
         <>
-          <img src={imageSrc} alt='avatar' className={styles.chat__img} />
+          <img
+            src={imageSrc}
+            alt='avatar'
+            className={styles.chat__img}
+            width={60}
+            height={60}
+          />
           <div className='chat-item__info'>
             <p className={styles.chat__name}>{name}</p>
           </div>

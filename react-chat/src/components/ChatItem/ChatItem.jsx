@@ -32,7 +32,13 @@ function ChatItem({ name, userId, img, last_message }) {
   return (
     <Link ref={ref} to={`/chat/${userId}`}>
       <div className={styles.chat__item}>
-        <img src={imageSrc} alt='avatar' className={styles.chat__img} />
+        <img
+          src={imageSrc}
+          alt='avatar'
+          width={60}
+          height={60}
+          className={styles.chat__img}
+        />
         <div className='chat-item__info'>
           <p className={styles.chat__name}>{name}</p>
           <p className={styles.chat__message}>{message}</p>
