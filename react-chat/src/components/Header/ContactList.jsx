@@ -7,7 +7,7 @@ import Search from '@mui/icons-material/Search';
 function Header({ name }) {
   return (
     <header className={styles.header}>
-      <Link to={PAGES.CHAT_LIST}>
+      <Link to={PAGES.CHAT_LIST} aria-label='Открыть список чатов'>
         <div className={styles.header__icon}>
           <ArrowBackIos className={styles.header__back} />
         </div>

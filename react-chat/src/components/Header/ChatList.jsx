@@ -7,7 +7,7 @@ import Search from '@mui/icons-material/Search';
 function Header({ text }) {
   return (
     <header className={styles.header}>
-      <Link to={PAGES.PROFILE}>
+      <Link to={PAGES.PROFILE} aria-label='Открыть профиль'>
         <div className={styles.header__icon}>
           <Menu className={styles.header__menu} />{' '}
         </div>

@@ -66,7 +66,7 @@ function ContactsList() {
             {items.map(({ id, username, avatar }) => (
               <ContactItem img={avatar} id={id} key={id} name={username} />
             ))}
-            <div ref={ref}></div>
+            <li ref={ref}></li>
           </ul>
         )}
 

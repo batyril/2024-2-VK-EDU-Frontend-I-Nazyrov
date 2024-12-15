@@ -73,7 +73,7 @@ function ChatList() {
                 last_message={last_message}
               />
             ))}
-            <div ref={ref}></div>
+            <li ref={ref}></li>
           </ul>
         )}
         {count === 0 && status !== REQUEST_STATUS.LOADING && <NoChats />}
