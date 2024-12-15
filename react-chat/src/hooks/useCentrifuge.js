@@ -69,9 +69,15 @@ const useCentrifuge = (chatId) => {
       }
 
       return () => {
-        centrifuge.disconnect();
-        subscription.removeAllListeners();
-        subscription.unsubscribe();
+        if (subscription) {
+          subscription.removeAllListeners();
+          subscription.unsubscribe();
+          subscription = null;
+        }
+        if (centrifuge) {
+          centrifuge.disconnect();
+          centrifuge = null;
+        }
       };
     };
 
