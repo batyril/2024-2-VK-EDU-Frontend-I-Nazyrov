@@ -9,7 +9,7 @@ const MessagesItem = forwardRef(function MessagesItem(
   { name, text, time, isSender, voice, files, isPrivate },
   ref,
 ) {
-  const [visibleFiles, setVisibleFiles] = useState([]); // Хранит видимые изображения
+  const [visibleFiles, setVisibleFiles] = useState([]);
 
   const { ref: inViewRef, inView } = useInView({
     threshold: 0.1,
