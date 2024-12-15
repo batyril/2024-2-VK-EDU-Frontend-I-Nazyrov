@@ -16,9 +16,9 @@ function Header({ text }) {
       <div className={styles.header__text}>
         <p className={styles.header__username}>{text}</p>
       </div>
-      <div className={styles.header__icon}>
+      <button className={styles.header__icon}>
         <Search className={styles.header__search} />
-      </div>
+      </button>
     </header>
   );
 }

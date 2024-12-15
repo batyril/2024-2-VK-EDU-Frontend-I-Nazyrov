@@ -3,7 +3,11 @@ import defaultAvatar from './../../img/avatar-default.jpg';
 function AvatarUploader({ avatarUrl, handleChange, error }) {
   return (
     <div className={styles.avatarContainer}>
-      <img className={styles.avatar} src={avatarUrl || defaultAvatar} />
+      <img
+        alt='фото профиля'
+        className={styles.avatar}
+        src={avatarUrl || defaultAvatar}
+      />
       {error && <p className={styles.error}>{error}</p>}
 
       <div className={styles.overlay}>

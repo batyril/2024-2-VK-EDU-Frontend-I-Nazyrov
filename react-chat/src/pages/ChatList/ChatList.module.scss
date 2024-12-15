@@ -15,7 +15,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    & > a {
+    & > li > a {
       text-decoration: none;
     }
   }

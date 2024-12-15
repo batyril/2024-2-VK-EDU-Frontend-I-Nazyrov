@@ -58,7 +58,7 @@ const ContactItem = memo(({ name, id, img }) => {
   };
 
   return (
-    <div ref={ref} onClick={fetchChatInfo} className={styles.chat__item}>
+    <li ref={ref} onClick={fetchChatInfo} className={styles.chat__item}>
       {loading && (
         <div className={styles.loading}>
           <Spinner />
@@ -79,7 +79,7 @@ const ContactItem = memo(({ name, id, img }) => {
           </div>
         </>
       )}
-    </div>
+    </li>
   );
 });
 
