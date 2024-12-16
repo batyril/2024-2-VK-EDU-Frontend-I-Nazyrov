@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# shellcheck disable=SC2164
+cd react-chat
+npm run lint

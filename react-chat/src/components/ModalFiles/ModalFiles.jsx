@@ -19,7 +19,7 @@ const ModalFiles = ({
     if (files.length === 0 && isModalOpen) {
       handleClose();
     }
-  }, [files]);
+  }, [files, handleClose, isModalOpen]);
 
   const handleInputChange = (event) => {
     setMessage(event.target.value);
