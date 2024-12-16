@@ -28,6 +28,11 @@
   background-color: $white;
 }
 
+@media (max-width: 600px) {
+  .login {
+    padding: 25px 15px;
+  }
+}
 .registration {
   font-size: 16px;
   color: $dark;
