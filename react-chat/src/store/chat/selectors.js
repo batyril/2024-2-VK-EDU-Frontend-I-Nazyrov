@@ -9,6 +9,7 @@ export const selectChatData = createSelector(selectChatState, (state) => ({
   page: state.page,
   hasMore: state.hasMore,
   search: state.search,
+  count: state.count,
 }));
 
 export default selectChatData;

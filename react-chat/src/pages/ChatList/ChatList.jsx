@@ -3,10 +3,7 @@ import * as styles from './ChatList.module.scss';
 import Header from '../../components/Header/ChatList.jsx';
 import CreateChat from '../../components/CreateChat/index.js';
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import PAGES from '../../const/pages.js';
-import { Player } from '@lottiefiles/react-lottie-player';
-import animate from '../../animation/noChats.json';
+
 import { useInView } from 'react-intersection-observer';
 import Spinner from '../../components/Spinner/index.js';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,9 +12,11 @@ import selectChatData from '../../store/chat/selectors.js';
 import REQUEST_STATUS from '../../const/request.js';
 import fetchChat from '../../store/chat/thunk.js';
 import useAuthErrorHandler from '../../hooks/useAuthErrorHandler.js';
+import NoChats from '../../components/NoChats/index.js';
 
 function ChatList() {
-  const { status, items, error, page, hasMore } = useSelector(selectChatData);
+  const { status, items, error, page, hasMore, count } =
+    useSelector(selectChatData);
   const dispatch = useDispatch();
   const containerRef = useRef(null);
   const scrollPositionRef = useRef(0);
@@ -63,35 +62,21 @@ function ChatList() {
           </div>
         )}
         {error && <div>Ошибка: {error}</div>}
-        {status === REQUEST_STATUS.SUCCESS &&
-          (items?.length > 0 ? (
-            <ul className={styles.chat__list}>
-              {items.map(({ id, avatar, last_message, title }) => (
-                <ChatItem
-                  img={avatar}
-                  userId={id}
-                  key={id}
-                  name={title}
-                  last_message={last_message}
-                />
-              ))}
-              <div ref={ref}></div>
-            </ul>
-          ) : (
-            <div className={styles.noChats}>
-              <p>
-                Чатов пока нет <br /> Перейдите в контакты, чтобы начать новый
-                чат
-              </p>
-              <Player
-                autoplay
-                loop
-                src={animate}
-                style={{ height: '300px', width: '300px' }}
+        {items?.length > 0 && (
+          <ul className={styles.chat__list}>
+            {items.map(({ id, avatar, last_message, title }) => (
+              <ChatItem
+                img={avatar}
+                userId={id}
+                key={id}
+                name={title}
+                last_message={last_message}
               />
-              <Link to={PAGES.CONTACTS}>Перейти в контакты</Link>
-            </div>
-          ))}
+            ))}
+            <li ref={ref}></li>
+          </ul>
+        )}
+        {count === 0 && status !== REQUEST_STATUS.LOADING && <NoChats />}
       </main>
       <CreateChat />
     </>

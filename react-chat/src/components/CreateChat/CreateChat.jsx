@@ -8,19 +8,13 @@ export function CreateChat() {
   return (
     <>
       <Link to={PAGES.CONTACTS}>
-        <button className={clsx(styles.createChat__button, styles.pulse)}>
+        <button
+          aria-label='Создать новый чат'
+          className={clsx(styles.createChat__button, styles.pulse)}
+        >
           <Edit className={styles.createChat__edit} />
         </button>
       </Link>
-
-      {/*{showModal &&*/}
-      {/*  createPortal(*/}
-      {/*    <ChatModal*/}
-      {/*      showModal={showModal}*/}
-      {/*      onClose={() => setShowModal(false)}*/}
-      {/*    />,*/}
-      {/*    document.body,*/}
-      {/*  )}*/}
     </>
   );
 }

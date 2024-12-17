@@ -13,6 +13,7 @@ const RecordingControls = ({
     <div className={styles.recordingControls}>
       {!isRecording ? (
         <button
+          aria-label='запись голосового сообщения'
           type='button'
           className={styles.recordingControls__send}
           onClick={startRecording}

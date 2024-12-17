@@ -7,7 +7,7 @@ import clsx from 'clsx';
 function Header({ name }) {
   return (
     <header className={clsx(styles.header)}>
-      <Link to={PAGES.AUTH}>
+      <Link to={PAGES.AUTH} aria-label='Открыть страницу логина'>
         <div className={styles.header__icon}>
           <ArrowBackIos className={styles.header__back} />{' '}
         </div>

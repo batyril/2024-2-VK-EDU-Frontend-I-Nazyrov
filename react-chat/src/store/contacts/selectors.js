@@ -11,6 +11,7 @@ export const selectContactsData = createSelector(
     page: state.page,
     hasMore: state.hasMore,
     search: state.search,
+    count: state.count,
   }),
 );
 

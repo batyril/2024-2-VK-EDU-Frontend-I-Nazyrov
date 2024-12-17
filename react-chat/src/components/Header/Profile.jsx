@@ -18,7 +18,7 @@ function Header({ name }) {
 
   return (
     <header className={clsx(styles.header)}>
-      <Link to={PAGES.CHAT_LIST}>
+      <Link to={PAGES.CHAT_LIST} aria-label='Открыть список чатов'>
         <div className={styles.header__icon}>
           <ArrowBackIos className={styles.header__back} />{' '}
         </div>
@@ -27,9 +27,9 @@ function Header({ name }) {
       <div className={styles.header__text}>
         <p className={styles.header__username}>{name}</p>
       </div>
-      <div onClick={handleLogout} className={clsx(styles.header__icon)}>
+      <button onClick={handleLogout} className={clsx(styles.header__icon)}>
         <LogoutIcon className={styles.header__back} />
-      </div>
+      </button>
     </header>
   );
 }

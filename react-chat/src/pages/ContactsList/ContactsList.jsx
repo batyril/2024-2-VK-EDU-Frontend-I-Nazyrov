@@ -13,7 +13,7 @@ import { incrementPage, resetContacts } from '../../store/contacts/slice.js';
 import useAuthErrorHandler from '../../hooks/useAuthErrorHandler.js';
 
 function ContactsList() {
-  const { status, items, error, page, hasMore } =
+  const { status, items, error, page, hasMore, count } =
     useSelector(selectContactsData);
   const dispatch = useDispatch();
   const containerRef = useRef(null);
@@ -61,18 +61,18 @@ function ContactsList() {
         )}
         {error && <div>Ошибка: {error}</div>}
 
-        {status === REQUEST_STATUS.SUCCESS &&
-          !error &&
-          (items?.length > 0 ? (
-            <ul className={styles.chat__list}>
-              {items.map(({ id, username, avatar }) => (
-                <ContactItem img={avatar} id={id} key={id} name={username} />
-              ))}
-              <div ref={ref}></div>
-            </ul>
-          ) : (
-            <div>Контакты не найдены</div>
-          ))}
+        {items?.length > 0 && (
+          <ul className={styles.chat__list}>
+            {items.map(({ id, username, avatar }) => (
+              <ContactItem img={avatar} id={id} key={id} name={username} />
+            ))}
+            <li ref={ref}></li>
+          </ul>
+        )}
+
+        {count === 0 && status !== REQUEST_STATUS.LOADING && (
+          <div>Контакты не найдены</div>
+        )}
       </main>
     </>
   );

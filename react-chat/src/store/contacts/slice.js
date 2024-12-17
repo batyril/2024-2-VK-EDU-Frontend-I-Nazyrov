@@ -11,6 +11,7 @@ export const contactsSlice = createSlice({
     page: 1,
     hasMore: true,
     search: '',
+    count: null,
   },
   reducers: {
     incrementPage: (state) => {
@@ -40,10 +41,19 @@ export const contactsSlice = createSlice({
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
         state.status = REQUEST_STATUS.SUCCESS;
-        if (state.page === 1) {
-          state.items = [...action.payload.results];
+        state.count = action.payload.count;
+        const newContacts = action.payload.results;
+        const isFirstPage = state.page === 1;
+
+        const uniqueContacts = newContacts.filter(
+          (newContact) =>
+            !state.items.some((contact) => contact.id === newContact.id),
+        );
+
+        if (isFirstPage) {
+          state.items = uniqueContacts;
         } else {
-          state.items = [...state.items, ...action.payload.results];
+          state.items = [...state.items, ...uniqueContacts];
         }
         state.hasMore = action.payload.next !== null;
       })

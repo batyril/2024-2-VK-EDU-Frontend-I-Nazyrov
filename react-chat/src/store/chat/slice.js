@@ -11,6 +11,7 @@ export const chatSlice = createSlice({
     page: 1,
     hasMore: true,
     search: '',
+    count: null,
   },
   reducers: {
     incrementPage: (state) => {
@@ -40,10 +41,18 @@ export const chatSlice = createSlice({
       })
       .addCase(fetchChat.fulfilled, (state, action) => {
         state.status = REQUEST_STATUS.SUCCESS;
-        if (state.page === 1) {
-          state.items = [...action.payload.results];
+        state.count = action.payload.count;
+        const newChats = action.payload.results;
+        const isFirstPage = state.page === 1;
+
+        const uniqueChats = newChats.filter(
+          (newChat) => !state.items.some((chat) => chat.id === newChat.id),
+        );
+
+        if (isFirstPage) {
+          state.items = uniqueChats;
         } else {
-          state.items = [...state.items, ...action.payload.results];
+          state.items = [...state.items, ...uniqueChats];
         }
 
         state.hasMore = action.payload.next !== null;
