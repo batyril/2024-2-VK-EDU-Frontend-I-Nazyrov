@@ -77,7 +77,7 @@ const TranslateForm = () => {
         setTranslatedText(result.translatedText || '');
 
         const translationHistoryItem = {
-          id: new Date(),
+          id: new Date().toISOString(),
           inputText,
           translatedText: result.translatedText || '',
           fromLanguage: selectedLanguageHeader1,

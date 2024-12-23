@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Translation {
-  id: Date;
+  id: string;
   fromLanguage: string;
   toLanguage: string;
   inputText: string;
