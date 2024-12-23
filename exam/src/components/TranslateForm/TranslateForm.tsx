@@ -135,6 +135,7 @@ const TranslateForm = () => {
               </select>
             </div>
             <textarea
+              className={styles.translateTo}
               placeholder='Enter text here...'
               value={inputText}
               onChange={handleInputTextChange}
