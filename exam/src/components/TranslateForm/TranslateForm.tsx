@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import languagesData from '../../data/languages.json';
 import * as styles from './TranslateForm.module.scss';
@@ -33,6 +33,9 @@ const TranslateForm = () => {
   const [inputText, setInputText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
 
+  const debouncedInputText = useRef<string>('');
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+
   const handleLanguageChange = (header: number, language: string) => {
     if (header === 1) {
       setSelectedLanguageHeader1(language);
@@ -62,34 +65,42 @@ const TranslateForm = () => {
   };
 
   useEffect(() => {
-    const translate = async () => {
-      if (!inputText.trim()) {
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debouncedInputText.current = inputText;
+
+    debounceTimeout.current = setTimeout(() => {
+      if (!debouncedInputText.current.trim()) {
         setTranslatedText('');
         return;
       }
 
-      try {
-        const result = await fetchTranslate({
-          text: inputText,
-          from: selectedLanguageHeader1,
-          to: selectedLanguageHeader2,
-        });
-        setTranslatedText(result.translatedText || '');
+      const translate = async () => {
+        try {
+          const result = await fetchTranslate({
+            text: debouncedInputText.current,
+            from: selectedLanguageHeader1,
+            to: selectedLanguageHeader2,
+          });
+          setTranslatedText(result.translatedText || '');
 
-        const translationHistoryItem = {
-          id: new Date().toISOString(),
-          inputText,
-          translatedText: result.translatedText || '',
-          fromLanguage: selectedLanguageHeader1,
-          toLanguage: selectedLanguageHeader2,
-        };
-        dispatch(addTranslation(translationHistoryItem));
-      } catch (error) {
-        console.error('Ошибка перевода:', error);
-      }
-    };
+          const translationHistoryItem = {
+            id: new Date().toISOString(),
+            inputText: debouncedInputText.current,
+            translatedText: result.translatedText || '',
+            fromLanguage: selectedLanguageHeader1,
+            toLanguage: selectedLanguageHeader2,
+          };
+          dispatch(addTranslation(translationHistoryItem));
+        } catch (error) {
+          console.error('Ошибка перевода:', error);
+        }
+      };
 
-    translate();
+      translate();
+    }, 300);
   }, [inputText, selectedLanguageHeader1, selectedLanguageHeader2, dispatch]);
 
   return (
