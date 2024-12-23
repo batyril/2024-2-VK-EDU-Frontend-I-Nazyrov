@@ -1,0 +1,20 @@
+.button {
+  background-color: rgba(66, 133, 244, 0.12);
+  color: rgb(25, 103, 210);
+  border: 1px solid rgb(218, 220, 224);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 15px;
+  border-radius: 50%;
+  font-size: 14px;
+  gap: 10px;
+  cursor: pointer;
+  height: 72px;
+  width: 72px;
+  & > svg {
+    width: 32px;
+    height: 32px;
+    fill: currentColor;
+  }
+}
