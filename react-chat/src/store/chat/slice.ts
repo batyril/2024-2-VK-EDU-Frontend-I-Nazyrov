@@ -40,13 +40,13 @@ export interface Creator {
 export interface LastMessage {
   id: string;
   text: string;
-  voice: any;
+  voice: string;
   sender: Sender;
   chat: string;
-  files: any[];
+  files: File[];
   updated_at: string;
   created_at: string;
-  was_read_by: any[];
+  was_read_by: string[];
 }
 
 export interface Sender {
@@ -113,8 +113,9 @@ export const chatSlice = createSlice({
         state.status = REQUEST_STATUS.SUCCESS;
         state.count = action.payload.count;
         const newChats = action.payload.results;
-        console.log('newChats', newChats);
         const isFirstPage = state.page === 1;
+
+        console.log(newChats, '@newChats');
 
         const uniqueChats = newChats.filter(
           (newChat: ChatItem) =>

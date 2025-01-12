@@ -19,22 +19,23 @@ const MessagesItem = forwardRef(function MessagesItem(
   { name, text, time, isSender, voice, files, isPrivate }: MessagesItemProps,
   ref: Ref<HTMLDivElement>,
 ) {
-  const [visibleFiles, setVisibleFiles] = useState<any[]>([]);
-
-  console.log(visibleFiles, 'visibleFiles');
-
   const { ref: inViewRef, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
   });
 
+  const [visibleFiles, setVisibleFiles] = useState<string[]>([]);
+
   useEffect(() => {
     if (inView && files?.length > 0) {
-      setVisibleFiles(
-        files.map((file) => {
+      const newVisibleFiles = files
+        .map((file) => {
           if ('item' in file) return file.item;
-        }),
-      );
+          return undefined;
+        })
+        .filter((item): item is string => item !== undefined);
+
+      setVisibleFiles(newVisibleFiles);
     }
   }, [inView, files]);
 

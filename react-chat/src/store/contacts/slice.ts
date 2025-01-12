@@ -8,7 +8,7 @@ export interface ContactItem {
   first_name: string;
   last_name: string;
   bio: string;
-  avatar: any;
+  avatar: string;
   is_online: boolean;
   last_online_at: string;
 }

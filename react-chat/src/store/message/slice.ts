@@ -4,14 +4,14 @@ import fetchMessage from './thunk.ts';
 
 export interface MessageItem {
   id: string;
-  text: any;
-  voice: any;
+  text: string;
+  voice: string;
   sender: Sender;
   chat: string;
   files: File[];
   updated_at: string;
   created_at: string;
-  was_read_by: any[];
+  was_read_by: string[];
 }
 
 export interface Sender {
