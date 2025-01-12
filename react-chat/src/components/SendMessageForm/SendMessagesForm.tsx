@@ -137,7 +137,6 @@ function SendMessagesForm({
     }
     try {
       const data = await getLocation();
-      console.log(data);
       await handleSubmit(null, { location: data });
       setIsDropdownOpen(false);
     } catch (error) {

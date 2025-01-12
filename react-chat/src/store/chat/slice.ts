@@ -115,8 +115,6 @@ export const chatSlice = createSlice({
         const newChats = action.payload.results;
         const isFirstPage = state.page === 1;
 
-        console.log(newChats, '@newChats');
-
         const uniqueChats = newChats.filter(
           (newChat: ChatItem) =>
             !state.items.some((chat) => chat.id === newChat.id),
